@@ -1,0 +1,47 @@
+commit c50b50ff899f802258cae673991edcd6a2867b73
+Author: Leopekka Saraste <leopekkas@gmail.com>
+Date:   Tue Mar 10 19:59:24 2020 +0200
+
+    Lisättiin uusi hakemisto
+
+ stuff/testi.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit fc022512ccfcab7390f4bbbc84c80520e81e2f4a
+Author: Leopekka Saraste <leopekkas@gmail.com>
+Date:   Tue Mar 10 19:57:54 2020 +0200
+
+    Lisätään tekstiä kolmas.txt ja toinen.txt -tiedostoihin
+
+ kolmas.txt | 1 +
+ toinen.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit e97078420ba9d9887c1a0875211d4441a07cade2
+Author: Leopekka Saraste <leopekkas@gmail.com>
+Date:   Tue Mar 10 19:56:58 2020 +0200
+
+    Lisätään kolmas.txt
+
+ kolmas.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 46c837bd9a80da72a8ff60b7132fb8d4af9c877e
+Author: Leopekka Saraste <leopekkas@gmail.com>
+Date:   Tue Mar 10 19:52:54 2020 +0200
+
+    Muutos ja lisäys
+
+ tiedosto.txt | 1 +
+ toinen.txt   | 0
+ 2 files changed, 1 insertion(+)
+
+commit 60f9d67183f724c82861dd2b44999f5efbd9a50b
+Author: Leopekka Saraste <leopekkas@gmail.com>
+Date:   Tue Mar 10 19:50:16 2020 +0200
+
+    tiedosto.txt luotu
+
+ tiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
