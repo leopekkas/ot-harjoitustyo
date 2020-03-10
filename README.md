@@ -1,6 +1,6 @@
 ## Otsikko
-*Kursivoitua tekstiä*
+**Viikko 1**
 
-**Boldattua tekstiä**
+https://github.com/leopekkas/ot-harjoitustyo/blob/master/laskarit/viikko1/gitlog.txt
 
-_Kaikkia **Yhdessä**_
+
