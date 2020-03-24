@@ -1,4 +1,4 @@
-## Otsikko
+## Ohjelmistotekniikan harjoitustyö, Kevät 2020
 ### Viikko 1 ###
 
 [Viikko 1, gitlog.txt -tehtävä](https://github.com/leopekkas/ot-harjoitustyo/blob/master/laskarit/viikko1/gitlog.txt)
