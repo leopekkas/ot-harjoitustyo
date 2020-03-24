@@ -3,6 +3,7 @@
 ## Sovelluksen tarkoitus ##
 
 * Sovelluksen avulla käyttäjä pystyy tarkastelemaan gravitaation vaikutusta aurinkokunnan suuruusluokan mittakaavoilla.
+* Sovellusta käytetään aina laitekohtaisesti, joten pääkäyttäjän lisäksi muita käyttäjiä siinä ei sinällään ole.
 
 ## Käyttöliittymä ##
 
@@ -13,7 +14,7 @@
 
 ### Ennen ensimmäisen kappaleen initialisointia ###
 
-* Käyttäjä voi luoda uuden keskuskappaleen, tai ladata tiedoston, joka sisältää esim. aiemmin käsiteltyjä kappaleita.* 
+* Käyttäjä voi luoda uuden keskuskappaleen, tai ladata tiedoston, joka sisältää esim. aiemmin käsiteltyjä kappaleita.
 
 ### Keskuskappaleen initialisoinnin jälkeen ###
 
