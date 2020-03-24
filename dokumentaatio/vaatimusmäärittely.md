@@ -2,7 +2,7 @@
 
 ## Sovelluksen tarkoitus ##
 
-* Sovelluksen avulla käyttäjä pystyy tarkastelemaan gravitaation vaikutusta aurinkokunnan suuruusluokan mittakaavoilla.
+* Sovelluksen avulla käyttäjä pystyy tarkastelemaan gravitaation vaikutusta aurinkokunnan suuruusluokan mittakaavoilla Newtonin lakien pohjalta.
 * Sovellusta käytetään aina laitekohtaisesti, joten pääkäyttäjän lisäksi muita käyttäjiä siinä ei sinällään ole.
 
 ## Käyttöliittymä ##
