@@ -2,4 +2,4 @@
 
 | päivä | aika | mitä tein |
 | :----:|:-----|:----- |
-| 24.3. | 3    | Markdown -tekstin hallintaa, tutustumista Junit testeihin |
+| 24.3. | 5    | Markdown -tekstin hallintaa, tutustumista Junit testeihin ja toisen viikon laskareiden tekemistä |
