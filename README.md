@@ -23,3 +23,10 @@ Testikattavuusraportti luodaan komennolla
 mvn jacoco:report
 ```
 Kattavuusraporttia voi tarkastella avaamalla selaimella tiedosto _target/site/jacoco/index.html_
+
+### Ohjelman ajaminen 
+
+Ohjelman voi ajaa komentoriviltä komennolla
+```
+mvn compile exec:java -Dexec.mainClass=aurinkokuntasimulaattori.Main
+```
