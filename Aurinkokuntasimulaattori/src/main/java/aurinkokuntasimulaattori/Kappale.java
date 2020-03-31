@@ -43,14 +43,14 @@ public class Kappale {
         this.name = name;
         this.mass = mass;
         this.radius = radius;
-        
+
         this.vx = vx;
         this.vy = vy;
-        
+
         this.x = x;
         this.y = y;
     }
-    
+
     // Getterit ja setterit
 
     public void setMass(int mass) {
@@ -109,9 +109,9 @@ public class Kappale {
         return y;
     }
 
-    
+
     // Käytännön toiminnallisuudet
-    
+
     public void liiku(double askel) {
         // summataan aiempaan paikkaan nopeus * aika-askeleen pituus
         
@@ -121,26 +121,26 @@ public class Kappale {
     
     public void gvuorovaikutus(Kappale toinen, double askel) {
         // Aika ilmoitetaan päivinä
-        
+
         // G ilmaistuna muodossa AU**3/(kg*D**2), jossa D on päivä
         double G = 1.488E-34;
-        
+
         double dx = toinen.x - x;
         double dy = toinen.y - y;
-        
+
         // Kappaleiden etäisyyden neliö
         double etnelio = dx * dx + dy * dy;
-        
+
         double maanMassa = 5.97219E24;
-        
+
         double voima = G * mass * maanMassa * toinen.mass * maanMassa / etnelio;
-        
+
         double lambda = Math.acos(0); // dZ = 0
         double phi = Math.atan2(dy, dx);
         double apu = voima / (mass * maanMassa) * askel;
-        
+
         vx += Math.sin(lambda) * Math.cos(phi) * apu;
         vy += Math.sin(lambda) * Math.sin(phi) * apu;
     }
-    
+
 }
