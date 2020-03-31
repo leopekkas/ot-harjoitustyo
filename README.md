@@ -10,3 +10,16 @@ Lisää kuvausta tulossa projektin edetessä!
 
 [Työaikakirjanpito](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/Työaikakirjanpito.md)
 
+## Komentorivitoiminnot 
+
+### Testaus
+
+Testit suoritetaan komennolla
+```
+mvn test
+```
+Testikattavuusraportti luodaan komennolla 
+```
+mvn jacoco:report
+```
+Kattavuusraporttia voi tarkastella avaamalla selaimella tiedosto _target/site/jacoco/index.html_
