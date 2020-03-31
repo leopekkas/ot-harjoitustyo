@@ -46,7 +46,7 @@ public class Main extends Application {
         circle.setRadius(keskusta.getRadius());
         
         //Lisätään ikkunalle otsikko
-        stage.setTitle("Ympyrän muodostus");
+        stage.setTitle("Ympyrän muodostus ja simppeliä animointia");
         
         stage.setScene(scene);
         
