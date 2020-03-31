@@ -30,3 +30,10 @@ Ohjelman voi ajaa komentoriviltä komennolla
 ```
 mvn compile exec:java -Dexec.mainClass=aurinkokuntasimulaattori.Main
 ```
+
+### Checkstyle
+
+Tiedostoon checkstyle.xml määrittelemät tarkistukset suoritetaan komennolla
+```
+mvn jxr:jxr checkstyle:checkstyle
+```
