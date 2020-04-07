@@ -86,12 +86,12 @@ public class UI extends Application {
                 canvas.getChildren().add(circle2);
                 
                 Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(nopeusx)
-                        , new KeyValue(circle2.layoutXProperty(), 600-circle2.getRadius())));
+                        , new KeyValue(circle2.layoutXProperty(), 600 - circle2.getRadius())));
                 timeline.setCycleCount(2);
                 timeline.play();
         
                 Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(nopeusy)
-                        , new KeyValue(circle2.layoutYProperty(), 300-circle2.getRadius())));
+                        , new KeyValue(circle2.layoutYProperty(), 300 - circle2.getRadius())));
                 timeline2.setCycleCount(2);
                 timeline2.play();
             }
@@ -100,7 +100,7 @@ public class UI extends Application {
         m2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Group root = InformationText();
+                Group root = informationText();
                 
                 Scene info = new Scene(root, 500, 200);
                 
@@ -159,23 +159,23 @@ public class UI extends Application {
                 newWindow.show();
                 
                 Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3)
-                        , new KeyValue(circle.layoutXProperty(), 600-circle.getRadius())));
+                        , new KeyValue(circle.layoutXProperty(), 600 - circle.getRadius())));
                 timeline.setCycleCount(3);
                 timeline.play();
 
                 Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(2)
-                        , new KeyValue(circle.layoutYProperty(), 300-circle.getRadius())));
+                        , new KeyValue(circle.layoutYProperty(), 300 - circle.getRadius())));
                 timeline2.setCycleCount(5);
                 timeline2.play();
                 
-                ((Node)(event.getSource())).getScene().getWindow().hide();
+                ((Node) (event.getSource())).getScene().getWindow().hide();
             }
 
         });
        
     }
     
-    public Group InformationText() {
+    public Group informationText() {
         Text otsikko = new Text();
         Text text = new Text();
         Text text2 = new Text();
