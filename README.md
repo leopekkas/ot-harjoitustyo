@@ -10,6 +10,8 @@ Lisää kuvausta tulossa projektin edetessä!
 
 [Työaikakirjanpito](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/Työaikakirjanpito.md)
 
+[Arkkitehtuurikuvaus](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/arkkitehtuuri.md)
+
 ## Komentorivitoiminnot 
 
 ### Testaus
