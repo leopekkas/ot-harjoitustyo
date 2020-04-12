@@ -9,3 +9,4 @@
 | 2.4.  | 2    | Toimintojen lisäämistä. Menu ja Mousebutton toiminnalisuuksien tutkimista JavaFX:ssä |
 | 6.4.  | 2    | Infotekstin lisääminen appiin, eri ikkunoiden käyttöä eri osa-alueisiin |
 | 7.4.  | 1    | Dokumentaation lisäämistä |
+| 11.4. | 2    | Modulaarisuuden lisäämistä ja koodin selkeyttämistä, koodin jakamista järkeviin osa-alueisiin |
