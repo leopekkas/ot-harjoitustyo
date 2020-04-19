@@ -35,7 +35,7 @@
                 <version>0.8.3</version>
                 <configuration>
                     <excludes>
-                        <exclude>aurinkokuntasimulaattori/UI/*</exclude>
+                        <exclude>aurinkokuntasimulaattori/ui/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

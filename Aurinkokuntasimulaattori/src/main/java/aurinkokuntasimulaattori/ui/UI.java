@@ -1,5 +1,10 @@
 package aurinkokuntasimulaattori.ui;
 
+import aurinkokuntasimulaattori.domain.SimulationPhysics;
+import aurinkokuntasimulaattori.domain.Kappale;
+import aurinkokuntasimulaattori.math.Vector2;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javafx.application.Application; 
@@ -8,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage; 
 import javafx.scene.shape.Circle; 
 import javafx.scene.control.Button;
-import javafx.scene.Node;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
@@ -19,17 +23,22 @@ import javafx.scene.text.Text;
 import javafx.scene.text.Font; 
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight; 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+
+import javafx.scene.paint.Color;
+
+import javafx.geometry.Orientation;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import static javafx.application.Application.launch;
-import javafx.geometry.Bounds;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.FlowPane;
 
 import javafx.scene.input.MouseButton;
 
@@ -38,6 +47,9 @@ import javafx.util.Duration;
 public class UI extends Application {
     
     private AnimationTimer mainLoop;
+    private Canvas simcanvas;
+    private final SimulationPhysics simulaatio = new SimulationPhysics();
+    Timeline simulationTimeline = new Timeline();
     
     public static void main(String[] args) {
         launch(args);
@@ -45,6 +57,40 @@ public class UI extends Application {
     
     @Override
     public void start(Stage stage) {
+        
+        Group root = new Group();
+        Scene scene = new Scene(root);
+        
+        BorderPane mainBorderPane = new BorderPane();
+        root.getChildren().add(mainBorderPane);
+        
+        simcanvas = createSimCanvas();
+        mainBorderPane.setCenter(simcanvas);
+        
+        simulationRendering();
+        
+        mainBorderPane.setTop(setUpButtons());
+        
+        Menu menu = new Menu("Info");
+        Menu simMenu = new Menu("Simulation");
+        Menu presets = new Menu("Presets");
+        
+        setUpMenuBar(menu, mainBorderPane);
+        setUpSimButtons(simMenu, mainBorderPane);
+        setUpPresets(presets, mainBorderPane);
+        
+        MenuBar mb = new MenuBar();
+        mb.getMenus().addAll(menu, simMenu, presets);
+        
+        VBox vb = new VBox(mb);
+        mainBorderPane.setTop(vb);
+        
+        stage.setScene(scene);
+        stage.show();
+        
+        /*
+        ArrayList<Kappale> lista = new ArrayList<>();
+        
         Pane maincanvas = new Pane();
         Pane canvas = new Pane();
         
@@ -66,8 +112,6 @@ public class UI extends Application {
         
         kaynnistysnappi.setText("Käynnistä simulaatio!");
         
-        mainSimulationWindow(canvas, kaynnistysnappi);
-        
         canvas.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 double x = e.getSceneX();
@@ -88,9 +132,9 @@ public class UI extends Application {
         //Lisätään ikkunalle otsikko
         stage.setTitle("Ympyrän muodostus ja simppeliä animointia");
         
-        stage.setScene(mainMenu);
+        //stage.setScene(mainMenu);
         
-        stage.show();
+        //stage.show();
         
         long startTime = System.currentTimeMillis();
         Label timerLabel = new Label();
@@ -99,16 +143,13 @@ public class UI extends Application {
             
             @Override
             public void handle(long now) {
-                Scene animaatioscene = stage.getScene();
-                
-           
-                if (animaatioscene instanceof AbstractScene) {
-                    ((AbstractScene) animaatioscene).tick();
-                }
+                Scene animaatioscene = stage.getScene();                
             }
             
         };
         mainLoop.start();
+        
+        */
        
     }
     
@@ -121,11 +162,9 @@ public class UI extends Application {
         otsikko.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         otsikko.setUnderline(true);
         
-        text.setText("Planeettoja voit lisätä joko edit-menunapin alta löytyvästä \n"
-                + "Lisää planeetta -napista tai hiiresi vasemmalla napilla.");
+        text.setText("Infoteksti on vanhentunut, korjailen pian!");
         
-        text2.setText("Lisäämiäsi kappaleita voit poistaa hiiren oikealla \n"
-                + "klikkauksella poistettavan kappaleen kohdalla.");
+        text2.setText("");
         
         otsikko.setX(50);
         otsikko.setY(50);
@@ -154,33 +193,120 @@ public class UI extends Application {
         circle.setCenterX(0);
         circle.setCenterY(0);
         canvas.getChildren().add(circle);
-                
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(nopeusx)
-                , new KeyValue(circle.layoutXProperty(), 600 - circle.getRadius())));
-        timeline.setCycleCount(2);
-        timeline.play();
-        
-        Timeline timeline2 = new Timeline(new KeyFrame(Duration.seconds(nopeusy)
-                , new KeyValue(circle.layoutYProperty(), 300 - circle.getRadius())));
-        timeline2.setCycleCount(2);
-        timeline2.play();
     }
     
-    // Lisätään Menunappien toiminnallisuudet
-    public void setUpMenuBar(Menu menu, Pane canvas) {
-        MenuItem m1 = new MenuItem("Lisää planeetta");
-        MenuItem m2 = new MenuItem("Info");
+    private Canvas createSimCanvas() {
+        Canvas canvas = new Canvas(1500, 1000);
+        return canvas;
+    }
+    
+    private void simulationRendering() {
+        drawSim();                
         
-        menu.getItems().add(m1);
-        menu.getItems().add(m2);
-        
-        // Planeetan lisäysnapin toiminnallisuus
-        m1.setOnAction(new EventHandler<ActionEvent>() {
+        simulationTimeline.setCycleCount(Timeline.INDEFINITE);
+        simulationTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(50), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                planeetanLisays(canvas, event);
+                simulateStep();
+                drawSim();
             }
+        }));
+    }
+    
+    private void drawSim() {
+        GraphicsContext graphics = simcanvas.getGraphicsContext2D(); 
+        
+        graphics.setFill(Color.BLACK);
+        graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
+        
+        for (Kappale planet : simulaatio.getPlanets()) {
+            drawPlanet(graphics, planet, 0, 1);
+        }
+    }
+    
+    private void drawPlanet(GraphicsContext graphics, Kappale kappale, int tail, double tailfactor) {
+        double radius = Math.max(kappale.getRadius(), 1);
+        Vector2 pos = kappale.getPos();
+        Color color = Color.WHITE;
+        
+        List<Vector2> oldPos = kappale.getOldPos();
+        if (oldPos != null) {
+            for (int i = 0; i < Math.min(tail, oldPos.size()); i++) {
+                Vector2 tailPos = oldPos.get(i);
+                graphics.setStroke(Color.WHITE);
+                graphics.strokeLine(pos.x, pos.y, tailPos.x, tailPos.y);
+                
+                pos = tailPos;
+            }
+        }
+        
+        graphics.setFill(color);
+        
+        graphics.fillOval(pos.x, pos.y, radius, radius);
+    }
+    
+    private void simulateStep() {
+        simulaatio.step(0.4, 0);
+        
+    }
+    
+    private FlowPane setUpButtons() {
+        FlowPane toolbar = new FlowPane(Orientation.HORIZONTAL);
+        toolbar.setHgap(3);
+        toolbar.setVgap(3);
+        VBox vb = new VBox(4);
+        toolbar.getChildren().add(vb);
+        
+        Button play = new Button("Run");
+        Button stop = new Button("Stop");
+        Button step = new Button("Step");
+        
+        vb.getChildren().add(play);
+        vb.getChildren().add(stop);
+        vb.getChildren().add(step);
+        
+        play.addEventHandler(ActionEvent.ACTION, event -> {
+            simulationTimeline.play();
         });
+        
+        stop.addEventHandler(ActionEvent.ACTION, event -> {
+            simulationTimeline.stop();
+        });
+        
+        step.addEventHandler(ActionEvent.ACTION, event -> {
+            simulateStep();
+            drawSim();
+        });
+        
+        return toolbar;
+    }
+    
+    public void setUpSimButtons(Menu menu, Pane canvas) {
+        MenuItem play = new MenuItem("Start");
+        MenuItem stop = new MenuItem("Stop");
+        MenuItem step = new MenuItem("Step");
+        
+        menu.getItems().add(play);
+        menu.getItems().add(stop);
+        menu.getItems().add(step);
+        
+        play.addEventHandler(ActionEvent.ACTION, event -> {
+            simulationTimeline.play();
+        });
+        
+        stop.addEventHandler(ActionEvent.ACTION, event -> {
+            simulationTimeline.stop();
+        });
+        
+        step.addEventHandler(ActionEvent.ACTION, event -> {
+            simulateStep();
+            drawSim();
+        });
+    }
+    
+    public void setUpMenuBar(Menu menu, Pane canvas) {
+        MenuItem m2 = new MenuItem("Info");
+        menu.getItems().add(m2);
         
         // Infonapin toiminnallisuus
         m2.setOnAction(new EventHandler<ActionEvent>() {
@@ -199,23 +325,25 @@ public class UI extends Application {
         });
     }
     
-    public void mainSimulationWindow(Pane canvas, Button menubtn) {
-        menubtn.setOnAction(new EventHandler<ActionEvent>() {
-
+    public void setUpPresets(Menu menu, Pane canvas) {
+        MenuItem preset1 = new MenuItem("Inner Planets of the Solar System");
+        menu.getItems().add(preset1);
+        
+        preset1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // Käynnistysnappia painettaessa avataan uusi ikkuna ja lisätään 
-                // siihen planeetta
-                
-                Scene scene = new Scene(canvas, 600, 300);
-                
-                Stage newWindow = new Stage();
-                newWindow.setScene(scene);
+                simulaatio.clear();
+                Kappale toinen = new Kappale("Aurinko", new Vector2(750, 500), new Vector2(0, 0), 400000, 30);
+        
+                Kappale maa = new Kappale("Maa", new Vector2(760, 400), new Vector2(20, 0), 150, 15);
+                Kappale kolmas = new Kappale("Mars", new Vector2(760, 900), new Vector2(-10, 0), 100, 10);
+                Kappale neljas = new Kappale("Merkurius", new Vector2(800, 513), new Vector2(0, 26.3), 10, 5);
 
-                newWindow.show();
-                planeetanLisays(canvas, event);
+                simulaatio.add(maa);
+                simulaatio.add(toinen);
+                simulaatio.add(kolmas);
+                simulaatio.add(neljas);
             }
-
         });
     }
     
