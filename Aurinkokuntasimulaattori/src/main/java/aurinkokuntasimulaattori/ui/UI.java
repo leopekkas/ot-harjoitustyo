@@ -69,8 +69,6 @@ public class UI extends Application {
         
         simulationRendering();
         
-        mainBorderPane.setTop(setUpButtons());
-        
         Menu menu = new Menu("Info");
         Menu simMenu = new Menu("Simulation");
         Menu presets = new Menu("Presets");
@@ -250,45 +248,12 @@ public class UI extends Application {
         
     }
     
-    private FlowPane setUpButtons() {
-        FlowPane toolbar = new FlowPane(Orientation.HORIZONTAL);
-        toolbar.setHgap(3);
-        toolbar.setVgap(3);
-        VBox vb = new VBox(4);
-        toolbar.getChildren().add(vb);
-        
-        Button play = new Button("Run");
-        Button stop = new Button("Stop");
-        Button step = new Button("Step");
-        
-        vb.getChildren().add(play);
-        vb.getChildren().add(stop);
-        vb.getChildren().add(step);
-        
-        play.addEventHandler(ActionEvent.ACTION, event -> {
-            simulationTimeline.play();
-        });
-        
-        stop.addEventHandler(ActionEvent.ACTION, event -> {
-            simulationTimeline.stop();
-        });
-        
-        step.addEventHandler(ActionEvent.ACTION, event -> {
-            simulateStep();
-            drawSim();
-        });
-        
-        return toolbar;
-    }
-    
     public void setUpSimButtons(Menu menu, Pane canvas) {
         MenuItem play = new MenuItem("Start");
         MenuItem stop = new MenuItem("Stop");
         MenuItem step = new MenuItem("Step");
         
-        menu.getItems().add(play);
-        menu.getItems().add(stop);
-        menu.getItems().add(step);
+        menu.getItems().addAll(play, stop, step);
         
         play.addEventHandler(ActionEvent.ACTION, event -> {
             simulationTimeline.play();
@@ -343,6 +308,7 @@ public class UI extends Application {
                 simulaatio.add(toinen);
                 simulaatio.add(kolmas);
                 simulaatio.add(neljas);
+                drawSim();
             }
         });
     }

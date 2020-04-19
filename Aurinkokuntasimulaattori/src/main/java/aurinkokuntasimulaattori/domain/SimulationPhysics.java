@@ -11,7 +11,7 @@ import java.util.Iterator;
 public class SimulationPhysics {
     
     // Gravitaatiovakio G 
-    private final double GRAVITY = 10; // AU**3*yr**(-2)*M(earth)**(-1)
+    private final double gconstant = 10; // AU**3*yr**(-2)*M(earth)**(-1)
     private final List<Kappale> planets = new ArrayList<>();
     
     public void clear() {
@@ -48,7 +48,7 @@ public class SimulationPhysics {
                         double et = delta.abs() * 10; 
                         
                         // F = G * m1 * m2 / r**2
-                        double f = -GRAVITY * (other.getMass() * planet.getMass()) / (et * et);
+                        double f = -gconstant * (other.getMass() * planet.getMass()) / (et * et);
                         // F = m * a
                         // a:n yksikkö nyt AU/yr**2
                         double acceleration = f / planet.getMass();
