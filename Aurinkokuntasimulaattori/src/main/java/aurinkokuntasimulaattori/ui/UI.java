@@ -73,7 +73,7 @@ public class UI extends Application {
         Menu simMenu = new Menu("Simulation");
         Menu presets = new Menu("Presets");
         
-        setUpMenuBar(menu, mainBorderPane);
+        setUpInfoBar(menu, mainBorderPane);
         setUpSimButtons(simMenu, mainBorderPane);
         setUpPresets(presets, mainBorderPane);
         
@@ -176,7 +176,35 @@ public class UI extends Application {
         Group root = new Group(otsikko, text, text2);
         
         return root;
-    }   
+    }
+    
+    public Group physicsText() {
+        Text otsikko = new Text();
+        Text text = new Text();
+        Text text2 = new Text();
+        
+        otsikko.setText("Physics behind the simulation");
+        otsikko.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        otsikko.setUnderline(true);
+        
+        text.setText("Newton kehitti gravitaatioteorian");
+        
+        text2.setText(", jota noudatetaan " +
+                "tänäkin päivänä 1!!!");
+        
+        otsikko.setX(50);
+        otsikko.setY(50);
+        
+        text.setX(50);
+        text.setY(80);
+        
+        text2.setX(50);
+        text2.setY(120);
+        
+        Group root = new Group(otsikko, text, text2);
+        
+        return root;
+    }
     
     public void planeetanLisays(Pane canvas, ActionEvent event) {
         Random rnd = new Random();
@@ -269,23 +297,39 @@ public class UI extends Application {
         });
     }
     
-    public void setUpMenuBar(Menu menu, Pane canvas) {
-        MenuItem m2 = new MenuItem("Info");
-        menu.getItems().add(m2);
+    public void setUpInfoBar(Menu menu, Pane canvas) {
+        MenuItem info = new MenuItem("Info");
+        MenuItem physics = new MenuItem("Physics behind the simulation");
+        menu.getItems().addAll(info, physics);
         
         // Infonapin toiminnallisuus
-        m2.setOnAction(new EventHandler<ActionEvent>() {
+        info.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Group root = informationText();                
                 Scene info = new Scene(root, 500, 200);                
                 Stage infostage = new Stage();
                 
-                infostage.setTitle("Infoa simulaatiosta");
+                infostage.setTitle("Information about the simulation");
                 
                 infostage.setScene(info);
                 
                 infostage.show();
+            }
+        });
+        
+        physics.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Group root = physicsText();                
+                Scene info = new Scene(root, 500, 200);                
+                Stage info2stage = new Stage();
+                
+                info2stage.setTitle("The physics behind the simulation");
+                
+                info2stage.setScene(info);
+                
+                info2stage.show();
             }
         });
     }
