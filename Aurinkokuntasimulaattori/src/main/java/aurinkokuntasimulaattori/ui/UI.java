@@ -91,10 +91,6 @@ public class UI extends Application {
         VBox vb = new VBox(mb);
         mainBorderPane.setTop(vb);
         
-        GridPane gridPane = makeCounters();
-        
-        mainBorderPane.setBottom(gridPane);
-        
         stage.setScene(scene);
         stage.show();
        
@@ -413,19 +409,6 @@ public class UI extends Application {
                 drawSim();
             }
         });
-    }
-    
-    public GridPane makeCounters() {
-        int rowIndex = 0;
-        GridPane gridPane = new GridPane();
-        Label stepstext = new Label("Simulated steps: ");
-        stepstext.setTextFill(Color.WHITE);
-        gridPane.add(new Label("Simulated steps: "), 0, rowIndex);
-        Label steps = new Label("0");
-        steps.setTextFill(Color.WHITE);
-        gridPane.add(steps, 1, 0);
-        
-        return gridPane;
     }
     
 }

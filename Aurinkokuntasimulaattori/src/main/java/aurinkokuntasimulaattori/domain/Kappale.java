@@ -33,6 +33,7 @@ public class Kappale {
         this.vel = vel;
     }
     
+    // Kappale ilman nopeutta
     public Kappale(String name, Vector2 pos, double mass, double radius) {
         this.name = name;
         this.mass = mass;
