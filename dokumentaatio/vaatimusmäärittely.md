@@ -7,8 +7,8 @@
 
 ## Käyttöliittymä ##
 
-* Sovellus aukeaa kirjautumisnäkymään, josta voi valita uuden täysin oman simulaation luomisen tai jonkin valmiin tilanteen ajamisen.
-* Valittuaan halitsemansa simulaatiotyppin käyttäjä pääsee näkymään, jossa planeetat käyttäytyvät simulaatiossa fysiikan lakien mukaisesti yksinkertaisessa 2D näkymässä.
+* Sovellus aukeaa kirjautumisnäkymään, josta voi valita uuden täysin oman simulaation luomisen tai jonkin valmiin tilanteen ajamisen. (Valmiit tilanteet tehtyinä suppeasti)
+* Valittuaan halitsemansa simulaatiotyppin käyttäjä pääsee näkymään, jossa planeetat käyttäytyvät simulaatiossa fysiikan lakien mukaisesti yksinkertaisessa 2D näkymässä. (Näkymä tehty)
 
 ## Perusversion tarjoama toiminnallisuus ##
 
