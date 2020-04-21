@@ -13,4 +13,5 @@
 | 16.4. | 2    | JavaFX animation kirjastoihin syvempää perehtymistä, ekat pyörivät aurinkokunnat |
 | 17.4. | 2    | Yksiköiden ja magnitudien kanssa tappelua, järkevien mittayksiköiden etsimistä ruudulla laskemista varten |
 | 19.4. | 1    | Menutoiminnallisuuksia, luokkien eriyttämistä, koodin siistimistä |
-| Yht.  | 22   |
+| 21.4. | 3    | Jar-tiedoston setup ja release, sekvenssikaavio |
+| Yht.  | 25   |
