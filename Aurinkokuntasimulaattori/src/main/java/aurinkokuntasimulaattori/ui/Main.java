@@ -1,4 +1,4 @@
-package aurinkokuntasimulaattori.domain;
+package aurinkokuntasimulaattori.ui;
 
 import aurinkokuntasimulaattori.ui.UI;
 

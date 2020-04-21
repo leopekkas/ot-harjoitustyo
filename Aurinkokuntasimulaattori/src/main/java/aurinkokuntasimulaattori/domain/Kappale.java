@@ -8,14 +8,6 @@ import aurinkokuntasimulaattori.math.Vector2;
 
 public class Kappale {
     
-    /*
-    Yksinkertaisuuden takia kappaleen massa ilmoitetaan maan massoissa.
-    
-    Tulevaisuudessa olisi kiva lisätä mahdollisuus ilmoittaa massa myös Jupiterin
-    tai Auringon massoina, mutta maan massoina ilmoittaminen on yleinen käytäntö 
-    ja tällä myös vältetään turhan suurien kymmenpotenssien pyörittely laskuissa
-    */
-    
     private boolean isDeleted = false;
      
     private String name;
@@ -126,9 +118,13 @@ public class Kappale {
     
     // Käytännön toiminnallisuudet
 
-    public void liiku(double askel) {
-        // summataan aiempaan paikkaan nopeus * aika-askeleen pituus        
-        this.pos = this.vel.mul(askel);
+    public void merge(Kappale other) {
+        other.delete();
+        
+        this.vel = this.vel.mul(mass);
+        this.vel = this.vel.add(other.vel.mul(other.mass).div(mass + other.mass));
+        mass += other.mass;
+        radius += Math.sqrt(other.radius);
     }
 
 }

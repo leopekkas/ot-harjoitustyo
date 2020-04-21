@@ -3,7 +3,6 @@ package aurinkokuntasimulaattori.ui;
 import aurinkokuntasimulaattori.domain.SimulationPhysics;
 import aurinkokuntasimulaattori.domain.Kappale;
 import aurinkokuntasimulaattori.math.Vector2;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -12,19 +11,22 @@ import javafx.scene.Group;
 import javafx.scene.Scene; 
 import javafx.stage.Stage; 
 import javafx.scene.shape.Circle; 
-import javafx.scene.control.Button;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font; 
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight; 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.stage.Popup;
 
 import javafx.scene.paint.Color;
 
@@ -32,24 +34,24 @@ import javafx.geometry.Orientation;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import static javafx.application.Application.launch;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.FlowPane;
-
-import javafx.scene.input.MouseButton;
 
 import javafx.util.Duration;
 
 public class UI extends Application {
     
+    private double timestep;
     private AnimationTimer mainLoop;
     private Canvas simcanvas;
     private final SimulationPhysics simulaatio = new SimulationPhysics();
     Timeline simulationTimeline = new Timeline();
+    
+    private long stepcounter;
     
     public static void main(String[] args) {
         launch(args);
@@ -57,6 +59,8 @@ public class UI extends Application {
     
     @Override
     public void start(Stage stage) {
+        
+        stepcounter = 0;
         
         Group root = new Group();
         Scene scene = new Scene(root);
@@ -67,87 +71,32 @@ public class UI extends Application {
         simcanvas = createSimCanvas();
         mainBorderPane.setCenter(simcanvas);
         
+        timestep = 0.4;
         simulationRendering();
         
         Menu menu = new Menu("Info");
         Menu simMenu = new Menu("Simulation");
         Menu presets = new Menu("Presets");
+        Menu timestepmenu = new Menu("Timestep length");
         
         setUpInfoBar(menu, mainBorderPane);
-        setUpSimButtons(simMenu, mainBorderPane);
+        setUpSimButtons(simMenu, mainBorderPane, stage);
         setUpPresets(presets, mainBorderPane);
+        setUpStepSlider(timestepmenu, mainBorderPane); 
+        
         
         MenuBar mb = new MenuBar();
-        mb.getMenus().addAll(menu, simMenu, presets);
+        mb.getMenus().addAll(menu, simMenu, presets, timestepmenu);
         
         VBox vb = new VBox(mb);
         mainBorderPane.setTop(vb);
         
+        GridPane gridPane = makeCounters();
+        
+        mainBorderPane.setBottom(gridPane);
+        
         stage.setScene(scene);
         stage.show();
-        
-        /*
-        ArrayList<Kappale> lista = new ArrayList<>();
-        
-        Pane maincanvas = new Pane();
-        Pane canvas = new Pane();
-        
-        Scene mainMenu = new Scene(maincanvas, 500, 500); 
-        
-        Bounds reunat = canvas.getBoundsInLocal();        
-        
-        Menu m = new Menu("Edit");
-        
-        setUpMenuBar(m, canvas);
-        
-        Button kaynnistysnappi = new Button();
-        
-        MenuBar mb = new MenuBar();
-        
-        mb.getMenus().add(m);
-        
-        VBox vb = new VBox(mb);
-        
-        kaynnistysnappi.setText("Käynnistä simulaatio!");
-        
-        canvas.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY) {
-                double x = e.getSceneX();
-                double y = e.getSceneY();
-                Circle circle = new Circle(x, y, 10);
-                canvas.getChildren().add(circle);
-            } else if (e.getButton() == MouseButton.SECONDARY) {
-                Node klikattu = e.getPickResult().getIntersectedNode();
-                if (klikattu instanceof Circle) {
-                    canvas.getChildren().remove(klikattu);
-                }         
-            }   
-        });        
-        
-        canvas.getChildren().add(vb);
-        maincanvas.getChildren().add(kaynnistysnappi);
-        
-        //Lisätään ikkunalle otsikko
-        stage.setTitle("Ympyrän muodostus ja simppeliä animointia");
-        
-        //stage.setScene(mainMenu);
-        
-        //stage.show();
-        
-        long startTime = System.currentTimeMillis();
-        Label timerLabel = new Label();
-        
-        mainLoop = new AnimationTimer() {
-            
-            @Override
-            public void handle(long now) {
-                Scene animaatioscene = stage.getScene();                
-            }
-            
-        };
-        mainLoop.start();
-        
-        */
        
     }
     
@@ -160,18 +109,20 @@ public class UI extends Application {
         otsikko.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         otsikko.setUnderline(true);
         
-        text.setText("Infoteksti on vanhentunut, korjailen pian!");
+        text.setText("Valmiita simulaatiomalleja voit tarkastella napin 'Presets' alta.");
         
-        text2.setText("");
+        text2.setText("Tarkemmat ohjeet simulaation käyttöön löydät " +
+                "GitHub -repositoriosta,\n tähän ei saakkaan helposti " +
+                "paljoa tekstiä");
         
-        otsikko.setX(50);
+        otsikko.setX(30);
         otsikko.setY(50);
         
-        text.setX(50);
+        text.setX(30);
         text.setY(80);
         
-        text2.setX(50);
-        text2.setY(120);
+        text2.setX(30);
+        text2.setY(110);
         
         Group root = new Group(otsikko, text, text2);
         
@@ -182,26 +133,33 @@ public class UI extends Application {
         Text otsikko = new Text();
         Text text = new Text();
         Text text2 = new Text();
+        Text text3 = new Text();
         
         otsikko.setText("Physics behind the simulation");
         otsikko.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         otsikko.setUnderline(true);
         
-        text.setText("Newton kehitti gravitaatioteorian");
+        text.setText("Newton kehitti gravitaatioteorian, " +
+                "jota noudatetaan tänäkin päivänä!!");
         
-        text2.setText(", jota noudatetaan " +
-                "tänäkin päivänä 1!!!");
+        text2.setText("Tarkemmat kaavat ja matemaattiset perusteet \n " +
+                "tulen sijoittamaan GitHub kansioon I think");
         
-        otsikko.setX(50);
+        text3.setText("Graphic design is my passion");
+        
+        otsikko.setX(30);
         otsikko.setY(50);
         
-        text.setX(50);
+        text.setX(30);
         text.setY(80);
         
-        text2.setX(50);
-        text2.setY(120);
+        text2.setX(30);
+        text2.setY(110);
         
-        Group root = new Group(otsikko, text, text2);
+        text3.setX(30);
+        text3.setY(150);
+        
+        Group root = new Group(otsikko, text, text2, text3);
         
         return root;
     }
@@ -222,7 +180,7 @@ public class UI extends Application {
     }
     
     private Canvas createSimCanvas() {
-        Canvas canvas = new Canvas(1500, 1000);
+        Canvas canvas = new Canvas(1500, 950);
         return canvas;
     }
     
@@ -233,10 +191,23 @@ public class UI extends Application {
         simulationTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(50), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                simulateStep();
+                simulateStep(timestep);
                 drawSim();
             }
         }));
+    }
+    
+    private Slider timestepSlider() {
+        Slider step = new Slider(0.0, 1.0, 1);
+        step.setShowTickLabels(true);
+        step.setShowTickMarks(true);
+        step.setMajorTickUnit(0.1);
+        
+        step.valueProperty().addListener(event -> {
+            timestep = step.getValue();
+        });
+        
+        return step;
     }
     
     private void drawSim() {
@@ -271,20 +242,32 @@ public class UI extends Application {
         graphics.fillOval(pos.x, pos.y, radius, radius);
     }
     
-    private void simulateStep() {
-        simulaatio.step(0.4, 0);
-        
+    private void simulateStep(double step) {
+        stepcounter++;
+        simulaatio.step(step, 0);        
     }
     
-    public void setUpSimButtons(Menu menu, Pane canvas) {
+    public void setUpSimButtons(Menu menu, Pane canvas, Stage stage) {
+        Popup popup = new Popup();
+        Label popupLabel = new Label("Please select a preset or add planets " +
+                "before starting up the simulation");
+        popupLabel.setTextFill(Color.WHITE); 
         MenuItem play = new MenuItem("Start");
         MenuItem stop = new MenuItem("Stop");
         MenuItem step = new MenuItem("Step");
         
         menu.getItems().addAll(play, stop, step);
+        popup.getContent().add(popupLabel);
         
         play.addEventHandler(ActionEvent.ACTION, event -> {
-            simulationTimeline.play();
+            if (simulaatio.getPlanets().size() > 0) {
+                popup.hide();
+                simulationTimeline.play();
+            } else {
+                if (!popup.isShowing()) {
+                    popup.show(stage);
+                }
+            }
         });
         
         stop.addEventHandler(ActionEvent.ACTION, event -> {
@@ -292,7 +275,10 @@ public class UI extends Application {
         });
         
         step.addEventHandler(ActionEvent.ACTION, event -> {
-            simulateStep();
+            if (popup.isShowing()) {
+                popup.hide();
+            }
+            simulateStep(timestep);
             drawSim();
         });
     }
@@ -335,10 +321,43 @@ public class UI extends Application {
     }
     
     public void setUpPresets(Menu menu, Pane canvas) {
-        MenuItem preset1 = new MenuItem("Inner Planets of the Solar System");
-        menu.getItems().add(preset1);
+        MenuItem preset1 = new MenuItem("Empty space (clean canvas)");
+        MenuItem preset2 = new MenuItem("Inner Planets of the Solar System");
+        MenuItem preset3 = new MenuItem("Binary star system with a distant third star orbiting");
+        MenuItem random10 = new MenuItem("10 random objects");
+        MenuItem random100 = new MenuItem("100 random objects");
+        MenuItem random200 = new MenuItem("200 random objects :-)");
+        menu.getItems().addAll(preset1, preset2, preset3, random10, random100, random200);
         
+        preset1Content(preset1);
+        preset2Content(preset2);
+        preset3Content(preset3);
+        presetRandomContent(random10, 10);
+        presetRandomContent(random100, 100);
+        presetRandomContent(random200, 200);
+    }
+    
+    public void setUpStepSlider(Menu menu, Pane canvas) {
+        Slider stepper = timestepSlider();
+        menu.getItems().add(new SeparatorMenuItem());
+        
+        CustomMenuItem stepperItem = new CustomMenuItem(stepper);
+        stepperItem.setHideOnClick(false);
+        menu.getItems().add(stepperItem);
+    }
+    
+    public void preset1Content(MenuItem preset1) {
         preset1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                simulaatio.clear();
+                drawSim();
+            }
+        });
+    }
+    
+    public void preset2Content(MenuItem preset) {
+        preset.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 simulaatio.clear();
@@ -355,6 +374,58 @@ public class UI extends Application {
                 drawSim();
             }
         });
+    }
+    
+    public void preset3Content(MenuItem preset) {
+        preset.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                simulaatio.clear();
+                Kappale toinen = new Kappale("Star1", new Vector2(750, 450), new Vector2(20.5, 0), 400000, 30);
+                Kappale kolmas = new Kappale("Star2", new Vector2(750, 500), new Vector2(-20.5, 0), 400000, 30);
+                Kappale distant = new Kappale("Star3", new Vector2(750, 100), new Vector2(15, 0), 10000, 15);
+
+                simulaatio.add(toinen);
+                simulaatio.add(kolmas);
+                simulaatio.add(distant);
+                drawSim();
+            }
+        });
+    }
+    
+    public void presetRandomContent(MenuItem preset, int n) {
+        
+        preset.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Random rndm = new Random();
+                simulaatio.clear();
+                for (int i = 0; i < n; i++) {
+                    Vector2 pos = new Vector2(100 + rndm.nextInt(1300), 100 + rndm.nextInt(800));
+                    
+                    // Randomisoidaan suunta (- vai +)
+                    double vx = rndm.nextDouble() * 5 * (rndm.nextBoolean() ? -1 : 1);
+                    double vy = rndm.nextDouble() * 5 * (rndm.nextBoolean() ? -1 : 1);
+                    Vector2 vel = new Vector2(vx, vy);
+                    Kappale lisattava = new Kappale(pos, vel, 100 + rndm.nextInt(400000), 2 + rndm.nextInt(30));
+                    simulaatio.add(lisattava);
+                }
+                drawSim();
+            }
+        });
+    }
+    
+    public GridPane makeCounters() {
+        int rowIndex = 0;
+        GridPane gridPane = new GridPane();
+        Label stepstext = new Label("Simulated steps: ");
+        stepstext.setTextFill(Color.WHITE);
+        gridPane.add(new Label("Simulated steps: "), 0, rowIndex);
+        Label steps = new Label("0");
+        steps.setTextFill(Color.WHITE);
+        gridPane.add(steps, 1, 0);
+        
+        return gridPane;
     }
     
 }
