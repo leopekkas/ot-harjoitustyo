@@ -1,3 +1,5 @@
+# Kesken! LateXin math mode ei oletuksellisesti toimi perus MarkDown tekstissä, joten etsin keinon kaavojen embeddaamiseen.
+
 ## Simulaation fysikaalinen premissi
 
 Tämänhetkisessä tilassaan projekti toimii vain mielenkiintoisena tapana tarkastella kappaleiden vuorovaikutusta ja niiden välistä laskentaa eri aika-askeleiden pituuksilla. Itse fysikaaliset arvot eivät vastaa totuutta, sillä etäisyyden tarkasteleminen javafx:n sisällä on osoittautunut haasteelliseksi ja jätänkin hienosäädön simulaation "todenmukaisuudessa" myöhemmille viikoille.
