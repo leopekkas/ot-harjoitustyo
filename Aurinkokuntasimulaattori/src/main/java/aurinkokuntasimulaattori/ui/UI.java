@@ -454,7 +454,7 @@ public class UI extends Application {
                 
                 int rowIndex = 0;
                 int columnIndex = 0;
-                TextField nimi = new TextField("Name of the object (Press enter to confirm)");
+                TextField nimi = new TextField("Name the object (Press enter to confirm)");
                 EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() { 
                     @Override
                     public void handle(ActionEvent e) { 
@@ -475,8 +475,12 @@ public class UI extends Application {
                     }
                 });
                 
+                Text teksti = new Text("Toiminnallisuus on vielä työn alla,\n"
+                        + "pahoittelut tästä!");
+                
                 gridi.add(confirm, columnIndex, rowIndex);
                 rowIndex++;
+                gridi.add(teksti, columnIndex, rowIndex + 2);
                 
                 newStage.setScene(newPlanet);
                 
