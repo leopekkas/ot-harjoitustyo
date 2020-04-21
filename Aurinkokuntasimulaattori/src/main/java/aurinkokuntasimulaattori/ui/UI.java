@@ -20,6 +20,8 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font; 
 import javafx.scene.text.FontPosture;
@@ -58,7 +60,7 @@ public class UI extends Application {
     }
     
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
         
         stepcounter = 0;
         
@@ -77,16 +79,17 @@ public class UI extends Application {
         Menu menu = new Menu("Info");
         Menu simMenu = new Menu("Simulation");
         Menu presets = new Menu("Presets");
+        Menu custom = new Menu("Custom");
         Menu timestepmenu = new Menu("Timestep length");
         
         setUpInfoBar(menu, mainBorderPane);
         setUpSimButtons(simMenu, mainBorderPane, stage);
         setUpPresets(presets, mainBorderPane);
         setUpStepSlider(timestepmenu, mainBorderPane); 
-        
+        setUpCustomize(custom, mainBorderPane);
         
         MenuBar mb = new MenuBar();
-        mb.getMenus().addAll(menu, simMenu, presets, timestepmenu);
+        mb.getMenus().addAll(menu, simMenu, presets, custom, timestepmenu);
         
         VBox vb = new VBox(mb);
         mainBorderPane.setTop(vb);
@@ -320,14 +323,16 @@ public class UI extends Application {
         MenuItem preset1 = new MenuItem("Empty space (clean canvas)");
         MenuItem preset2 = new MenuItem("Inner Planets of the Solar System");
         MenuItem preset3 = new MenuItem("Binary star system with a distant third star orbiting");
+        MenuItem preset4 = new MenuItem("Gas giant with a few moons");
         MenuItem random10 = new MenuItem("10 random objects");
         MenuItem random100 = new MenuItem("100 random objects");
         MenuItem random200 = new MenuItem("200 random objects :-)");
         menu.getItems().addAll(preset1, preset2, preset3, random10, random100, random200);
-        
+        // Lisää preset4 kun saat valmiiksi
         preset1Content(preset1);
         preset2Content(preset2);
         preset3Content(preset3);
+        preset4Content(preset4);
         presetRandomContent(random10, 10);
         presetRandomContent(random100, 100);
         presetRandomContent(random200, 200);
@@ -389,6 +394,23 @@ public class UI extends Application {
         });
     }
     
+    public void preset4Content(MenuItem preset) {
+        preset.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                simulaatio.clear();
+                Kappale toinen = new Kappale("Star", new Vector2(750, 450), new Vector2(0, 0), 4000000, 50);
+                Kappale kolmas = new Kappale("Gas giant", new Vector2(200, 450), new Vector2(0, 25), 80000, 20);
+                Kappale distant = new Kappale("Moon", new Vector2(210, 440), new Vector2(-10.5, 17), 10, 5);
+
+                simulaatio.add(toinen);
+                simulaatio.add(kolmas);
+                simulaatio.add(distant);
+                drawSim();
+            }
+        });
+    }
+    
     public void presetRandomContent(MenuItem preset, int n) {
         
         preset.setOnAction(new EventHandler<ActionEvent>() {
@@ -407,6 +429,58 @@ public class UI extends Application {
                     simulaatio.add(lisattava);
                 }
                 drawSim();
+            }
+        });
+    }
+    
+    public void setUpCustomize(Menu menu, Pane canvas) {
+        MenuItem add = new MenuItem("Add an object");
+        menu.getItems().addAll(add);
+        userAddPlanet(add);
+    }
+    
+    public void userAddPlanet(MenuItem add) {
+        add.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Group root = new Group();                
+                Scene newPlanet = new Scene(root, 500, 200);                
+                Stage newStage = new Stage();
+                GridPane gridi = new GridPane();
+                Kappale uusi = new Kappale(new Vector2(0, 0), new Vector2(0, 0), 10, 10);
+                
+                newStage.setTitle("Add a new object");
+                root.getChildren().add(gridi);
+                
+                int rowIndex = 0;
+                int columnIndex = 0;
+                TextField nimi = new TextField("Name of the object (Press enter to confirm)");
+                EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() { 
+                    @Override
+                    public void handle(ActionEvent e) { 
+                        uusi.setName(nimi.getText());               
+                    } 
+                }; 
+                nimi.setOnAction(event2);
+                gridi.add(nimi, rowIndex, columnIndex);
+                rowIndex++;
+                
+                Button confirm = new Button("Add the planet");
+                
+                confirm.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        simulaatio.add(uusi);
+                        drawSim();
+                    }
+                });
+                
+                gridi.add(confirm, columnIndex, rowIndex);
+                rowIndex++;
+                
+                newStage.setScene(newPlanet);
+                
+                newStage.show();
             }
         });
     }
