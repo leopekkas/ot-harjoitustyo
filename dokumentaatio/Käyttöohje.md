@@ -1,5 +1,7 @@
 ## Käyttöohje
 
+Lataa tiedosto [aurinkokuntasimulaattori.jar](https://github.com/leopekkas/ot-harjoitustyo/releases)
+
 ### Toiminnallisuudet
 
 Sovelluksessa näkyy aluksi musta ruutu, jonka vasemmasta ylänurkasta löydät menuvalikon. 
