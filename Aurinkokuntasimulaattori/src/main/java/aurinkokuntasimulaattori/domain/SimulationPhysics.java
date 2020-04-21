@@ -10,8 +10,8 @@ import java.util.Iterator;
 
 public class SimulationPhysics {
     
-    // Gravitaatiovakio G 
-    private final double gconstant = 10; // AU**3*yr**(-2)*M(earth)**(-1)
+    // Gravitaatiovakio G (AU**3*yr**(-2)*M(earth)**(-1))
+    private final double gconstant = 10;
     private final List<Kappale> planets = new ArrayList<>();
     
     public void clear() {
