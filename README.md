@@ -37,7 +37,7 @@ generoi hakemistoon _target_ suoritettavan jar-tiedoston _Aurinkokuntasimulaatto
 
 ### Checkstyle
 
-Tiedostoon checkstyle.xml määrittelemät tarkistukset suoritetaan komennolla
+Tiedostoon [checkstyle.xml](https://github.com/leopekkas/ot-harjoitustyo/blob/master/Aurinkokuntasimulaattori/checkstyle.xml) määrittelemät tarkistukset suoritetaan komennolla
 ```
 mvn jxr:jxr checkstyle:checkstyle
 ```
