@@ -53,6 +53,7 @@ public class UI extends Application {
     private final SimulationPhysics simulaatio = new SimulationPhysics();
     Timeline simulationTimeline = new Timeline();
     
+    // Tällä lasken käytyjen steppien lukumäärää
     private long stepcounter;
     
     public static void main(String[] args) {
@@ -76,22 +77,7 @@ public class UI extends Application {
         timestep = 0.4;
         simulationRendering();
         
-        Menu menu = new Menu("Info");
-        Menu simMenu = new Menu("Simulation");
-        Menu presets = new Menu("Presets");
-        Menu custom = new Menu("Custom");
-        Menu timestepmenu = new Menu("Timestep length");
-        
-        setUpInfoBar(menu, mainBorderPane);
-        setUpSimButtons(simMenu, mainBorderPane, stage);
-        setUpPresets(presets, mainBorderPane);
-        setUpStepSlider(timestepmenu, mainBorderPane); 
-        setUpCustomize(custom, mainBorderPane);
-        
-        MenuBar mb = new MenuBar();
-        mb.getMenus().addAll(menu, simMenu, presets, custom, timestepmenu);
-        
-        VBox vb = new VBox(mb);
+        VBox vb = setupMenuBar(mainBorderPane, stage);
         mainBorderPane.setTop(vb);
         
         stage.setScene(scene);
@@ -128,6 +114,27 @@ public class UI extends Application {
         return root;
     }
     
+    public VBox setupMenuBar(Pane mainBorderPane, Stage stage) {
+        Menu menu = new Menu("Info");
+        Menu simMenu = new Menu("Simulation");
+        Menu presets = new Menu("Presets");
+        Menu custom = new Menu("Custom");
+        Menu timestepmenu = new Menu("Timestep length");
+        
+        setUpInfoBar(menu, mainBorderPane);
+        setUpSimButtons(simMenu, mainBorderPane, stage);
+        setUpPresets(presets, mainBorderPane);
+        setUpStepSlider(timestepmenu, mainBorderPane); 
+        setUpCustomize(custom, mainBorderPane);
+        
+        MenuBar mb = new MenuBar();
+        mb.getMenus().addAll(menu, simMenu, presets, custom, timestepmenu);
+        
+        VBox vb = new VBox(mb);
+        
+        return vb;
+    }
+    
     public Group physicsText() {
         Text otsikko = new Text();
         Text text = new Text();
@@ -161,21 +168,6 @@ public class UI extends Application {
         Group root = new Group(otsikko, text, text2, text3);
         
         return root;
-    }
-    
-    public void planeetanLisays(Pane canvas, ActionEvent event) {
-        Random rnd = new Random();
-                
-        int koko = rnd.nextInt(50);
-                
-        int nopeusx = rnd.nextInt(3) + 1;
-        int nopeusy = rnd.nextInt(3) + 1;
-                
-        Circle circle = new Circle(koko);
-                
-        circle.setCenterX(0);
-        circle.setCenterY(0);
-        canvas.getChildren().add(circle);
     }
     
     private Canvas createSimCanvas() {
