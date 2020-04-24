@@ -27,26 +27,7 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics </artifactId>
             <version>14</version>
-            <classifier>win</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics </artifactId>
-            <version>14</version>
             <classifier>linux</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics </artifactId>
-            <version>14</version>
-            <classifier>mac</classifier>
-        </dependency>
-       
-        <dependency>
-            <groupId>de.saxsys</groupId>
-            <artifactId>jfx-testrunner</artifactId>
-            <version>1.2</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <properties>
