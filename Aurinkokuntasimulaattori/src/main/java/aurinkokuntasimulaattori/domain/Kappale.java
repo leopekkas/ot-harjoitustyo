@@ -6,6 +6,11 @@ import java.util.List;
 
 import aurinkokuntasimulaattori.math.Vector2;
 
+/**
+ * Simulaation yksittäistä kappaletta kuvaava luokka,
+ * joka sisältää tietoa esim. Kappaleen massasta, halkaisijasta,
+ * nimestä, nopeudesta ja paikasta.
+ */
 public class Kappale {
     
     private boolean isDeleted = false;
@@ -77,7 +82,14 @@ public class Kappale {
     public void setVel(Vector2 vel) {
         this.vel = vel;
     }
-
+    
+    /**
+     * Metodia käytetään kappaleen paikan päivittämiseen.
+     * 
+     * @param pos Kappaleen uusi paikkavektorin arvo
+     * @param tail Lukumäärä, jonka koon verran kappale pitää tietoa
+     * vanhoista paikkavektoreistaan
+     */
     public void setPos(Vector2 pos, int tail) {
         if (tail == 0) {
             oldPos = null;
@@ -92,7 +104,11 @@ public class Kappale {
         }
         this.pos = pos;
     }
-
+    
+    /**
+     * Metodi palauttaa tiedot kappaleen aiemmista paikoista simulaatiossa
+     * @return Palautusarvona lista paikkavektoreista
+     */
     public List<Vector2> getOldPos() {
         return oldPos;
     }
@@ -113,19 +129,26 @@ public class Kappale {
         return isDeleted;
     } 
     
+    /**
+     * Kappaleen poistamisen metodi
+     */
     public void delete() {
         this.isDeleted = true;
     }
     
     // Käytännön toiminnallisuudet
-
-    public void merge(Kappale other) {
-        other.delete();
-        
+    /**
+     * Metodia käytetään kahden kappaleen yhdistämiseen toisiinsa
+     * 
+     * @param other Annettu toinen kappale, joka liitetään osaksi tätä kappaletta
+     */
+    public void merge(Kappale other) {    
         this.vel = this.vel.mul(mass);
         this.vel = this.vel.add(other.vel.mul(other.mass).div(mass + other.mass));
         mass += other.mass;
         radius += Math.sqrt(other.radius);
+        
+        other.delete();
     }
 
 }

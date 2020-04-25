@@ -8,16 +8,28 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
+/**
+ * Simulaation fysikaalisista ominaisuuksista vastaava luokka.
+ */
 public class SimulationPhysics {
     
     // Gravitaatiovakio G (AU**3*yr**(-2)*M(earth)**(-1))
     private final double gconstant = 10;
     private final List<Kappale> planets = new ArrayList<>();
     
+    /**
+     * Metodilla voidaan tyhjentää simulaatio kappaleista.
+     */
     public void clear() {
         planets.clear();
     }
     
+    /**
+     * Metodia käytetään planeetan lisäämiseen osaksi simulaatiota
+     * 
+     * @param planet Syötteeksi annettava planeetta
+     * 
+     */
     public void add(Kappale planet) {
         planets.add(planet);
     }
@@ -26,6 +38,14 @@ public class SimulationPhysics {
         return Collections.unmodifiableCollection(planets);
     }
     
+    /**
+     * Metodi laskee jokaisella kutsumiskerrallaan kappaleen vuorovaikutuksen
+     * muihin simulaation planeettoihin ja päivittää niiden nopeusvektoria
+     * 
+     * @param timestep Laskennassa käytettävän aika-askeleen pituus
+     * @param tail Simulaation tallentaman kappaleiden aiempien paikkojen lkm:n ptuus
+     * 
+     */   
     public void step(double timestep, int tail) {
         for (Kappale k : planets) {
             gvuorovaikutus(k, timestep);
@@ -33,7 +53,7 @@ public class SimulationPhysics {
         
         updateVel(planets, timestep, tail);
     }
-    
+
     private void gvuorovaikutus(Kappale planet, double timestep) {
         if (planet.isDeleted()) {
             return;
