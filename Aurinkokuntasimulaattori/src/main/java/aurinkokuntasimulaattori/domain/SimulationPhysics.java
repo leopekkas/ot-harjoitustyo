@@ -4,8 +4,6 @@ import aurinkokuntasimulaattori.math.Vector2;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -15,7 +13,7 @@ public class SimulationPhysics {
     
     // Gravitaatiovakio G (AU**3*yr**(-2)*M(earth)**(-1))
     private final double gconstant = 10;
-    private final List<Planet> planets = new ArrayList<>();
+    private final ArrayList<Planet> planets = new ArrayList<>();
     
     /**
      * Metodilla voidaan tyhjentää simulaatio kappaleista.
@@ -34,8 +32,8 @@ public class SimulationPhysics {
         planets.add(planet);
     }
     
-    public Collection<Planet> getPlanets() {
-        return Collections.unmodifiableCollection(planets);
+    public ArrayList<Planet> getPlanets() {
+        return this.planets;
     }
     
     /**

@@ -9,16 +9,28 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Luokka vastaa simulaatiodatan lisäämisestä tekstitiedoston kautta.
+ */
 public class Loader {
     
     BufferedReader reader;
-    ArrayList<Planet> planets;
+    ArrayList<Planet> lista;
     
     public Loader() {
-        this.planets = new ArrayList<Planet>();
+        this.lista = new ArrayList<Planet>();
     }
     
+    /**
+     * Metodi lukee tiedoston rivi kerrallaan ja muodostaa joka rivistä 
+     * niin pystyessään Planet-olion.
+     * 
+     * @param file Syötteenä annettava tiedosto
+     * @return Palauttaa listan planeetoista
+     * @throws IOException 
+     */
     public ArrayList readPlanetsFromFile(File file) throws IOException {
+        this.lista.clear();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             
@@ -26,9 +38,9 @@ public class Loader {
             while (content != null) {
                 String[] osat = content.split(", ");
                 if (osat.length == 7) {
-                    if (makePlanet(osat) != null) {
-                        Planet p = makePlanet(osat);                    
-                        this.planets.add(p);
+                    if (makePlanet(content) != null) {
+                        Planet p = makePlanet(content);                    
+                        this.lista.add(p);
                     }
                 }
                 content = br.readLine();
@@ -37,10 +49,11 @@ public class Loader {
             e.printStackTrace();
             System.out.println("Error reading the file");
         }
-        return this.planets;
+        return this.lista;
     }
     
-    private Planet makePlanet(String[] osat) {
+    private Planet makePlanet(String rivi) {
+        String[] osat = rivi.split(", ");
         String name = osat[0];
         if (isDouble(osat[1]) && isDouble(osat[2]) && isDouble(osat[3])
                 && isDouble(osat[4]) && isDouble(osat[5]) && isDouble(osat[6])) {

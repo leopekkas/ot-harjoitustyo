@@ -3,6 +3,7 @@ package aurinkokuntasimulaattori.ui;
 import aurinkokuntasimulaattori.domain.SimulationPhysics;
 import aurinkokuntasimulaattori.domain.Planet;
 import aurinkokuntasimulaattori.domain.Loader;
+import aurinkokuntasimulaattori.domain.Saver;
 import aurinkokuntasimulaattori.math.Vector2;
 import java.util.List;
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ public class UI extends Application {
     private final SimulationPhysics simulaatio = new SimulationPhysics();
     Timeline simulationTimeline = new Timeline();
     Loader loader = new Loader();
+    Saver saver = new Saver();
     FileChooser filechooser = new FileChooser();
     
     // Tällä lasken käytyjen steppien lukumäärää
@@ -336,14 +338,20 @@ public class UI extends Application {
         
         menu.getItems().addAll(save, load);
         
+        save.setOnAction(event -> {
+            saver.saveSimulationData(simulaatio.getPlanets());
+        });
+        
         load.setOnAction(event -> {
             try {
                 File toLoad = chooseLoadFile(stage);
-                ArrayList<Planet> filelist = loader.readPlanetsFromFile(toLoad);
                 simulaatio.clear();
-                for (int i = 0; i < filelist.size(); i++) {
-                    simulaatio.add(filelist.get(i));
+                ArrayList<Planet> filelist = loader.readPlanetsFromFile(toLoad);
+                for (int a = 0; a < filelist.size(); a++) {
+                    simulaatio.add(filelist.get(a));
                 }
+                stepcounter = 0;
+                timecounter = 0;
                 drawSim();
             } catch (IOException e) {
                 System.out.println("Error");
@@ -385,6 +393,8 @@ public class UI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 simulaatio.clear();
+                stepcounter = 0;
+                timecounter = 0;
                 drawSim();
             }
         });
@@ -405,6 +415,8 @@ public class UI extends Application {
                 simulaatio.add(toinen);
                 simulaatio.add(kolmas);
                 simulaatio.add(neljas);
+                stepcounter = 0;
+                timecounter = 0;
                 drawSim();
             }
         });
@@ -422,6 +434,8 @@ public class UI extends Application {
                 simulaatio.add(toinen);
                 simulaatio.add(kolmas);
                 simulaatio.add(distant);
+                stepcounter = 0;
+                timecounter = 0;
                 drawSim();
             }
         });
@@ -439,6 +453,8 @@ public class UI extends Application {
                 simulaatio.add(toinen);
                 simulaatio.add(kolmas);
                 simulaatio.add(distant);
+                stepcounter = 0;
+                timecounter = 0;
                 drawSim();
             }
         });
@@ -461,6 +477,8 @@ public class UI extends Application {
                     Planet lisattava = new Planet(pos, vel, 100 + rndm.nextInt(400000), 2 + rndm.nextInt(30));
                     simulaatio.add(lisattava);
                 }
+                stepcounter = 0;
+                timecounter = 0;
                 drawSim();
             }
         });
