@@ -20,5 +20,5 @@
 
 * Käyttäjä pystyy tarkastella nykyisten kappaleiden käyttäytymistä yksinkertaisessa simulaatiossa.
 * Käyttäjä voi lisätä simulaatioon uusia kappaleita ja antamaan niille ominaisuuksia, kuten massan, halkaisijan, nopeuden ja tunnistetietoja, kuten nimen ja värin.
-* Käyttäjä pystyy tallentamaan nykyisen simulaation sisältämät kappaleet tiedostoon, jonka pystyy myöhemmin ajamaan uudestaan sovelluksessa.
-* Käyttäjä pystyy testailemaan valmiiksi luotuja tilanteita, esim. aurinkokuntaa vastaavaa järjestelmää.
+* Käyttäjä pystyy tallentamaan nykyisen simulaation sisältämät kappaleet tiedostoon, jonka pystyy myöhemmin ajamaan uudestaan sovelluksessa. (Tehty)
+* Käyttäjä pystyy testailemaan valmiiksi luotuja tilanteita, esim. aurinkokuntaa vastaavaa järjestelmää. (Tehty)
