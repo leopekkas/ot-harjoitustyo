@@ -1,6 +1,5 @@
 package aurinkokuntasimulaattori.domain;
 
-import java.math.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,7 @@ import aurinkokuntasimulaattori.math.Vector2;
  * joka sisältää tietoa esim. Kappaleen massasta, halkaisijasta,
  * nimestä, nopeudesta ja paikasta.
  */
-public class Kappale {
+public class Planet {
     
     private boolean isDeleted = false;
      
@@ -29,7 +28,7 @@ public class Kappale {
     
     
     // Kappale ilman nopeutta (testaukseen ns. tippuva kappale)
-    public Kappale(Vector2 pos, Vector2 vel, double mass, double radius) {
+    public Planet(Vector2 pos, Vector2 vel, double mass, double radius) {
         this.name = null;
         this.mass = mass;
         this.radius = radius;
@@ -39,7 +38,7 @@ public class Kappale {
     }
     
     // Kappale ilman nopeutta
-    public Kappale(String name, Vector2 pos, double mass, double radius) {
+    public Planet(String name, Vector2 pos, double mass, double radius) {
         this.name = name;
         this.mass = mass;
         this.radius = radius;
@@ -48,7 +47,7 @@ public class Kappale {
         this.vel = new Vector2(0, 0);
     }
     
-    public Kappale(String name, Vector2 pos, Vector2 vel, double mass, double radius) {
+    public Planet(String name, Vector2 pos, Vector2 vel, double mass, double radius) {
         this.name = name;
         this.mass = mass;
         this.radius = radius;
@@ -142,7 +141,7 @@ public class Kappale {
      * 
      * @param other Annettu toinen kappale, joka liitetään osaksi tätä kappaletta
      */
-    public void merge(Kappale other) {    
+    public void merge(Planet other) {    
         this.vel = this.vel.mul(mass);
         this.vel = this.vel.add(other.vel.mul(other.mass).div(mass + other.mass));
         mass += other.mass;

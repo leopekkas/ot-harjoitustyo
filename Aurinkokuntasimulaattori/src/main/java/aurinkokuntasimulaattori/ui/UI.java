@@ -1,16 +1,19 @@
 package aurinkokuntasimulaattori.ui;
 
 import aurinkokuntasimulaattori.domain.SimulationPhysics;
-import aurinkokuntasimulaattori.domain.Kappale;
+import aurinkokuntasimulaattori.domain.Planet;
+import aurinkokuntasimulaattori.domain.Loader;
 import aurinkokuntasimulaattori.math.Vector2;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
+import java.io.File;
+import java.io.IOException;
 
 import javafx.application.Application; 
 import javafx.scene.Group; 
 import javafx.scene.Scene; 
-import javafx.stage.Stage; 
-import javafx.scene.shape.Circle; 
+import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
@@ -29,6 +32,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Popup;
+
+import javafx.stage.FileChooser;
 
 import javafx.scene.paint.Color;
 
@@ -50,11 +55,16 @@ public class UI extends Application {
     private double timestep;
     private AnimationTimer mainLoop;
     private Canvas simcanvas;
+    
     private final SimulationPhysics simulaatio = new SimulationPhysics();
     Timeline simulationTimeline = new Timeline();
+    Loader loader = new Loader();
+    FileChooser filechooser = new FileChooser();
     
     // Tällä lasken käytyjen steppien lukumäärää
     private long stepcounter;
+    private double timecounter;
+    private Label stepTimeLabel;
     
     public static void main(String[] args) {
         launch(args);
@@ -64,6 +74,8 @@ public class UI extends Application {
     public void start(Stage stage) throws Exception {
         
         stepcounter = 0;
+        timecounter = 0;
+        filechooser.setTitle("Choose the file to use");
         
         Group root = new Group();
         Scene scene = new Scene(root);
@@ -79,6 +91,9 @@ public class UI extends Application {
         
         VBox vb = setupMenuBar(mainBorderPane, stage);
         mainBorderPane.setTop(vb);
+        
+        stepTimeLabel = new Label("");
+        mainBorderPane.setBottom(stepTimeLabel);
         
         stage.setScene(scene);
         stage.show();
@@ -115,20 +130,22 @@ public class UI extends Application {
     }
     
     public VBox setupMenuBar(Pane mainBorderPane, Stage stage) {
+        Menu fileMenu = new Menu("File");
         Menu menu = new Menu("Info");
         Menu simMenu = new Menu("Simulation");
         Menu presets = new Menu("Presets");
         Menu custom = new Menu("Custom");
         Menu timestepmenu = new Menu("Timestep length");
         
-        setUpInfoBar(menu, mainBorderPane);
-        setUpSimButtons(simMenu, mainBorderPane, stage);
-        setUpPresets(presets, mainBorderPane);
-        setUpStepSlider(timestepmenu, mainBorderPane); 
-        setUpCustomize(custom, mainBorderPane);
+        setUpFileMenu(fileMenu, stage);
+        setUpInfoBar(menu);
+        setUpSimButtons(simMenu, stage);
+        setUpPresets(presets);
+        setUpStepSlider(timestepmenu); 
+        setUpCustomize(custom);
         
         MenuBar mb = new MenuBar();
-        mb.getMenus().addAll(menu, simMenu, presets, custom, timestepmenu);
+        mb.getMenus().addAll(fileMenu, menu, simMenu, presets, custom, timestepmenu);
         
         VBox vb = new VBox(mb);
         
@@ -207,12 +224,12 @@ public class UI extends Application {
         graphics.setFill(Color.BLACK);
         graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
         
-        for (Kappale planet : simulaatio.getPlanets()) {
+        for (Planet planet : simulaatio.getPlanets()) {
             drawPlanet(graphics, planet, 0, 1);
         }
     }
     
-    private void drawPlanet(GraphicsContext graphics, Kappale kappale, int tail, double tailfactor) {
+    private void drawPlanet(GraphicsContext graphics, Planet kappale, int tail, double tailfactor) {
         double radius = Math.max(kappale.getRadius(), 1);
         Vector2 pos = kappale.getPos();
         Color color = Color.WHITE;
@@ -235,10 +252,12 @@ public class UI extends Application {
     
     private void simulateStep(double step) {
         stepcounter++;
+        timecounter += step;
+        updateStepCounter();
         simulaatio.step(step, 0);        
     }
     
-    public void setUpSimButtons(Menu menu, Pane canvas, Stage stage) {
+    public void setUpSimButtons(Menu menu, Stage stage) {
         Popup popup = new Popup();
         Label popupLabel = new Label("Please select a preset or add planets " +
                 "before starting up the simulation");
@@ -274,7 +293,7 @@ public class UI extends Application {
         });
     }
     
-    public void setUpInfoBar(Menu menu, Pane canvas) {
+    public void setUpInfoBar(Menu menu) {
         MenuItem info = new MenuItem("Info");
         MenuItem physics = new MenuItem("Physics behind the simulation");
         menu.getItems().addAll(info, physics);
@@ -311,7 +330,29 @@ public class UI extends Application {
         });
     }
     
-    public void setUpPresets(Menu menu, Pane canvas) {
+    private void setUpFileMenu(Menu menu, Stage stage) {
+        MenuItem save = new MenuItem("Save");
+        MenuItem load = new MenuItem("Load");
+        
+        menu.getItems().addAll(save, load);
+        
+        load.setOnAction(event -> {
+            try {
+                File toLoad = chooseLoadFile(stage);
+                ArrayList<Planet> filelist = loader.readPlanetsFromFile(toLoad);
+                simulaatio.clear();
+                for (int i = 0; i < filelist.size(); i++) {
+                    simulaatio.add(filelist.get(i));
+                }
+                drawSim();
+            } catch (IOException e) {
+                System.out.println("Error");
+            }
+            
+        });
+    }
+    
+    public void setUpPresets(Menu menu) {
         MenuItem preset1 = new MenuItem("Empty space (clean canvas)");
         MenuItem preset2 = new MenuItem("Inner Planets of the Solar System");
         MenuItem preset3 = new MenuItem("Binary star system with a distant third star orbiting");
@@ -330,7 +371,7 @@ public class UI extends Application {
         presetRandomContent(random200, 200);
     }
     
-    public void setUpStepSlider(Menu menu, Pane canvas) {
+    public void setUpStepSlider(Menu menu) {
         Slider stepper = timestepSlider();
         menu.getItems().add(new SeparatorMenuItem());
         
@@ -354,11 +395,11 @@ public class UI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 simulaatio.clear();
-                Kappale toinen = new Kappale("Aurinko", new Vector2(750, 500), new Vector2(0, 0), 400000, 30);
+                Planet toinen = new Planet("Aurinko", new Vector2(750, 500), new Vector2(0, 0), 400000, 30);
         
-                Kappale maa = new Kappale("Maa", new Vector2(760, 400), new Vector2(20, 0), 150, 15);
-                Kappale kolmas = new Kappale("Mars", new Vector2(760, 900), new Vector2(-10, 0), 100, 10);
-                Kappale neljas = new Kappale("Merkurius", new Vector2(800, 513), new Vector2(0, 26.3), 10, 5);
+                Planet maa = new Planet("Maa", new Vector2(760, 400), new Vector2(20, 0), 150, 15);
+                Planet kolmas = new Planet("Mars", new Vector2(760, 900), new Vector2(-10, 0), 100, 10);
+                Planet neljas = new Planet("Merkurius", new Vector2(800, 513), new Vector2(0, 26.3), 10, 5);
 
                 simulaatio.add(maa);
                 simulaatio.add(toinen);
@@ -374,9 +415,9 @@ public class UI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 simulaatio.clear();
-                Kappale toinen = new Kappale("Star1", new Vector2(750, 450), new Vector2(20.5, 0), 400000, 30);
-                Kappale kolmas = new Kappale("Star2", new Vector2(750, 500), new Vector2(-20.5, 0), 400000, 30);
-                Kappale distant = new Kappale("Star3", new Vector2(750, 100), new Vector2(15, 0), 10000, 15);
+                Planet toinen = new Planet("Star1", new Vector2(750, 450), new Vector2(20.5, 0), 400000, 30);
+                Planet kolmas = new Planet("Star2", new Vector2(750, 500), new Vector2(-20.5, 0), 400000, 30);
+                Planet distant = new Planet("Star3", new Vector2(750, 100), new Vector2(15, 0), 10000, 15);
 
                 simulaatio.add(toinen);
                 simulaatio.add(kolmas);
@@ -391,9 +432,9 @@ public class UI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 simulaatio.clear();
-                Kappale toinen = new Kappale("Star", new Vector2(750, 450), new Vector2(0, 0), 4000000, 50);
-                Kappale kolmas = new Kappale("Gas giant", new Vector2(200, 450), new Vector2(0, 25), 80000, 20);
-                Kappale distant = new Kappale("Moon", new Vector2(210, 440), new Vector2(-10.5, 17), 10, 5);
+                Planet toinen = new Planet("Star", new Vector2(750, 450), new Vector2(0, 0), 4000000, 50);
+                Planet kolmas = new Planet("Gas giant", new Vector2(200, 450), new Vector2(0, 25), 80000, 20);
+                Planet distant = new Planet("Moon", new Vector2(210, 440), new Vector2(-10.5, 17), 10, 5);
 
                 simulaatio.add(toinen);
                 simulaatio.add(kolmas);
@@ -417,7 +458,7 @@ public class UI extends Application {
                     double vx = rndm.nextDouble() * 5 * (rndm.nextBoolean() ? -1 : 1);
                     double vy = rndm.nextDouble() * 5 * (rndm.nextBoolean() ? -1 : 1);
                     Vector2 vel = new Vector2(vx, vy);
-                    Kappale lisattava = new Kappale(pos, vel, 100 + rndm.nextInt(400000), 2 + rndm.nextInt(30));
+                    Planet lisattava = new Planet(pos, vel, 100 + rndm.nextInt(400000), 2 + rndm.nextInt(30));
                     simulaatio.add(lisattava);
                 }
                 drawSim();
@@ -425,10 +466,26 @@ public class UI extends Application {
         });
     }
     
-    public void setUpCustomize(Menu menu, Pane canvas) {
+    public void setUpCustomize(Menu menu) {
         MenuItem add = new MenuItem("Add an object");
-        menu.getItems().addAll(add);
+        MenuItem delete = new MenuItem("Clear a single object");
+        menu.getItems().addAll(add, delete);
+        userDeletePlanet(delete);
         userAddPlanet(add);
+    }
+    
+    public void userDeletePlanet(MenuItem delete) {
+        delete.setOnAction(event -> {
+            Group root = new Group();
+            Scene deleteScene = new Scene(root, 500, 200);
+            Stage newStage = new Stage();
+            GridPane gridi = new GridPane();
+            
+            newStage.setTitle("Clear a planet");
+            
+            int rowIndex = 0;
+            int columnIndex = 0;
+        });
     }
     
     public void userAddPlanet(MenuItem add) {
@@ -439,7 +496,7 @@ public class UI extends Application {
                 Scene newPlanet = new Scene(root, 500, 200);                
                 Stage newStage = new Stage();
                 GridPane gridi = new GridPane();
-                Kappale uusi = new Kappale(new Vector2(0, 0), new Vector2(0, 0), 10, 10);
+                Planet uusi = new Planet(new Vector2(0, 0), new Vector2(0, 0), 10, 10);
                 
                 newStage.setTitle("Add a new object");
                 root.getChildren().add(gridi);
@@ -479,6 +536,17 @@ public class UI extends Application {
                 newStage.show();
             }
         });
+    }
+    
+    private void updateStepCounter() {
+        String s = String.valueOf(stepcounter);
+        String d = String.valueOf((int)timecounter);
+        stepTimeLabel.setText("Elapsed timesteps: " + s + "        Elapsed time: " + d);
+    }
+    
+    private File chooseLoadFile(Stage stage) {
+        File toLoad = filechooser.showOpenDialog(stage);
+        return toLoad;
     }
     
 }

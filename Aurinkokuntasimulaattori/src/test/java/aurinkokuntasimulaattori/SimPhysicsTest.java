@@ -5,7 +5,7 @@
  */
 package aurinkokuntasimulaattori;
 
-import aurinkokuntasimulaattori.domain.Kappale;
+import aurinkokuntasimulaattori.domain.Planet;
 import aurinkokuntasimulaattori.domain.SimulationPhysics;
 import aurinkokuntasimulaattori.math.Vector2;
 import org.junit.After;
@@ -37,7 +37,7 @@ public class SimPhysicsTest {
         assertEquals(0, simulaatio.getPlanets().size());
         
         Vector2 vektori = new Vector2(0, 0);
-        simulaatio.add(new Kappale("Maa", vektori, vektori, 10, 10));
+        simulaatio.add(new Planet("Maa", vektori, vektori, 10, 10));
         
         assertEquals(1, simulaatio.getPlanets().size());
     }
@@ -48,7 +48,7 @@ public class SimPhysicsTest {
         assertEquals(0, simulaatio.getPlanets().size());
         
         Vector2 vektori = new Vector2(0, 0);
-        simulaatio.add(new Kappale("Maa", vektori, vektori, 10, 10));
+        simulaatio.add(new Planet("Maa", vektori, vektori, 10, 10));
         simulaatio.clear();
         
         assertEquals(0, simulaatio.getPlanets().size());

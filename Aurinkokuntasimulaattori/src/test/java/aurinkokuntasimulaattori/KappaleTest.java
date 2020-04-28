@@ -5,7 +5,7 @@
  */
 package aurinkokuntasimulaattori;
 
-import aurinkokuntasimulaattori.domain.Kappale;
+import aurinkokuntasimulaattori.domain.Planet;
 import aurinkokuntasimulaattori.math.Vector2;
 
 import org.junit.After;
@@ -21,10 +21,10 @@ import static org.junit.Assert.*;
  */
 public class KappaleTest {
     
-    Kappale testi1;
-    Kappale testi2;
-    Kappale testi3;
-    Kappale testi4;
+    Planet testi1;
+    Planet testi2;
+    Planet testi3;
+    Planet testi4;
     Vector2 paikkavektori1;
     Vector2 paikkavektori2;
     Vector2 nopeusvektori1;
@@ -41,10 +41,10 @@ public class KappaleTest {
         paikkavektori2 = new Vector2(0, 0);
         nopeusvektori1 = new Vector2(10, 10);
         nopeusvektori2 = new Vector2(-5, 3.2);
-        testi1 = new Kappale("Maa", paikkavektori1, nopeusvektori1, 10, 10);
-        testi2 = new Kappale(paikkavektori1, nopeusvektori1, 15, 100);
-        testi3 = new Kappale("Mars", paikkavektori2, nopeusvektori2, 100, 100); 
-        testi4 = new Kappale("Paikallaan", paikkavektori2, 100, 100);
+        testi1 = new Planet("Maa", paikkavektori1, nopeusvektori1, 10, 10);
+        testi2 = new Planet(paikkavektori1, nopeusvektori1, 15, 100);
+        testi3 = new Planet("Mars", paikkavektori2, nopeusvektori2, 100, 100); 
+        testi4 = new Planet("Paikallaan", paikkavektori2, 100, 100);
     }
     
     @Test

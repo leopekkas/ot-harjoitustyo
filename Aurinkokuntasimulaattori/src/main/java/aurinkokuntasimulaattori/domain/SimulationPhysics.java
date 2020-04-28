@@ -15,7 +15,7 @@ public class SimulationPhysics {
     
     // Gravitaatiovakio G (AU**3*yr**(-2)*M(earth)**(-1))
     private final double gconstant = 10;
-    private final List<Kappale> planets = new ArrayList<>();
+    private final List<Planet> planets = new ArrayList<>();
     
     /**
      * Metodilla voidaan tyhjentää simulaatio kappaleista.
@@ -30,11 +30,11 @@ public class SimulationPhysics {
      * @param planet Syötteeksi annettava planeetta
      * 
      */
-    public void add(Kappale planet) {
+    public void add(Planet planet) {
         planets.add(planet);
     }
     
-    public Collection<Kappale> getPlanets() {
+    public Collection<Planet> getPlanets() {
         return Collections.unmodifiableCollection(planets);
     }
     
@@ -47,14 +47,14 @@ public class SimulationPhysics {
      * 
      */   
     public void step(double timestep, int tail) {
-        for (Kappale k : planets) {
+        for (Planet k : planets) {
             gvuorovaikutus(k, timestep);
         }
         
         updateVel(planets, timestep, tail);
     }
 
-    private void gvuorovaikutus(Kappale planet, double timestep) {
+    private void gvuorovaikutus(Planet planet, double timestep) {
         if (planet.isDeleted()) {
             return;
         }
@@ -83,10 +83,10 @@ public class SimulationPhysics {
         planet.setVel(planet.getVel().add(force.mul(timestep))); 
     }
     
-    private void updateVel(List<Kappale> planets, double timestep, int tail) {
-        Iterator<Kappale> it = planets.iterator();
+    private void updateVel(List<Planet> planets, double timestep, int tail) {
+        Iterator<Planet> it = planets.iterator();
         while (it.hasNext()) {
-            Kappale planet = it.next(); 
+            Planet planet = it.next(); 
             
             if (planet.isDeleted()) {
                 it.remove();

@@ -1,8 +1,6 @@
 
 package aurinkokuntasimulaattori.math;
 
-import java.util.Objects;
-
 // Luokka vektorilaskentaa varten
 
 public class Vector2 {
