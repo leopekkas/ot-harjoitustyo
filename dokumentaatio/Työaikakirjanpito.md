@@ -14,4 +14,6 @@
 | 17.4. | 2    | Yksiköiden ja magnitudien kanssa tappelua, järkevien mittayksiköiden etsimistä ruudulla laskemista varten |
 | 19.4. | 1    | Menutoiminnallisuuksia, luokkien eriyttämistä, koodin siistimistä |
 | 21.4. | 3    | Jar-tiedoston setup ja release, sekvenssikaavio |
-| Yht.  | 25   |
+| 26.4. | 1    | Pomin säätämistä, että ohjelma ajaa javan myöhemmilläkin versioilla |
+| 28.4. | 4    | Pysyväistallennuksen ja tiedostojen lataamisen ominaisuudet ja testit näille |
+| Yht.  | 30   |
