@@ -33,3 +33,5 @@ Alla ladattavan esimerkkitiedoston sisältö:
 Maa, 100, 200, 5, -4.3, 10, 100
 Kuu, 300, 400, 2, -8, 10.9, 110
 ```
+
+Projekti sisältää (tällä hetkellä) tyhjän _data_-kansion, joka toimii hyvin alustana tallennustietojen säilyttämiselle. Voit kuitenkin vapaasti valita haluamasi kansion tiedostoille.
