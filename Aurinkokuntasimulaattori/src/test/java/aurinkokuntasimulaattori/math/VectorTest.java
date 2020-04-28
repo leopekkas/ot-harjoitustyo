@@ -100,8 +100,5 @@ public class VectorTest {
         
         assertEquals(true, vector3.equals(vector2));
     }
-    
-    @Test
-    public void clearPlanetsTest() {
-    }
+
 }

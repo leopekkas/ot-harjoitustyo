@@ -1,13 +1,9 @@
 package aurinkokuntasimulaattori.domain;
 
-import aurinkokuntasimulaattori.domain.Planet;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import javafx.stage.FileChooser;
-import java.util.Collections;
 
 import java.util.ArrayList;
 
@@ -29,9 +25,7 @@ public class Saver {
      * 
      * @param planeetat Syötteenä annetaan lista tallennettavista planeetoista
      */
-    public void saveSimulationData(ArrayList<Planet> planeetat) {
-        FileChooser chooser = new FileChooser();
-        File savefile = chooser.showSaveDialog(null);
+    public void saveSimulationData(File savefile, ArrayList<Planet> planeetat) {
         try {
             this.wr = new FileWriter(savefile);
             for (int k = 0; k < planeetat.size(); k++) {

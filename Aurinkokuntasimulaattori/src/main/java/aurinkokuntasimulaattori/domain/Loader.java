@@ -1,6 +1,5 @@
 package aurinkokuntasimulaattori.domain;
 
-import aurinkokuntasimulaattori.domain.Planet;
 import aurinkokuntasimulaattori.math.Vector2;
 
 import java.io.File;

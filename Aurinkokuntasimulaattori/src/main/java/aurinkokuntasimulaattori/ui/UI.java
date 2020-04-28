@@ -1,9 +1,9 @@
 package aurinkokuntasimulaattori.ui;
 
+import aurinkokuntasimulaattori.domain.Saver;
+import aurinkokuntasimulaattori.domain.Loader;
 import aurinkokuntasimulaattori.domain.SimulationPhysics;
 import aurinkokuntasimulaattori.domain.Planet;
-import aurinkokuntasimulaattori.domain.Loader;
-import aurinkokuntasimulaattori.domain.Saver;
 import aurinkokuntasimulaattori.math.Vector2;
 import java.util.List;
 import java.util.ArrayList;
@@ -339,7 +339,9 @@ public class UI extends Application {
         menu.getItems().addAll(save, load);
         
         save.setOnAction(event -> {
-            saver.saveSimulationData(simulaatio.getPlanets());
+            FileChooser chooser = new FileChooser();
+            File savefile = chooser.showSaveDialog(null);
+            saver.saveSimulationData(savefile, simulaatio.getPlanets());
         });
         
         load.setOnAction(event -> {

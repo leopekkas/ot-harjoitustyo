@@ -53,4 +53,6 @@ public class SimPhysicsTest {
         
         assertEquals(0, simulaatio.getPlanets().size());
     }
+    
+    
 }
