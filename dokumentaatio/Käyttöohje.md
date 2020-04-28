@@ -24,7 +24,7 @@ _Timestep length_ -napista avautuu käyttöösi slideri, jolla voit muokata aika
 
 _File_ menuvalikosta löydät Save ja Load -napit, joilla voit tallentaa simulaation senhetkisen tilan, tai ladata itse kirjoittamasi tai aiemmin tallentamasi tiedoston ajettavaksi.
 
-_Save_-nappi avaa tiedostoselaimen, jonka avulla voit navigoida toivomaasi kansioon ja tekemään sinne haluamasi nimisen tiedoston tallennetulle datalle.
+_Save_-nappi avaa tiedostoselaimen, jonka avulla voit navigoida toivomaasi kansioon ja tekemään sinne haluamasi nimisen tekstitiedoston tallennetulle datalle. 
 
 _Load_-napilla avaa näkymään myös tiedostoselaimen, josta voit valita haluamasi tiedoston ladattavaksi. Huomaathan, että tiedon tulee olle täsmälleen oikeassa muodossa, jotta simulaatio osaa sen lukea. Tekstin toivottu muoto tulee olla muodossa Planeetan nimi, paikan x-koordinaatti, y- koordinaatti, nopeuden x-suuntainen vektori, nopeuden y-suuntainen vektori, kappaleen massa, kappaleen säde. Kappaleen nimi on String-oliomuuttuja ja muut tiedot Double-muuttujia. Kappaleiden tiedot erotetaan rivinvaihdolla. 
 
