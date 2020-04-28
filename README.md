@@ -12,6 +12,10 @@ Sovelluksen avulla käyttäjä voi tarkastella gravitaation vaikutuksia aurinkok
 
 [Arkkitehtuurikuvaus](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/arkkitehtuuri.md)
 
+## Releaset
+
+[Viikko 5](https://github.com/leopekkas/ot-harjoitustyo/releases)
+
 ## Komentorivitoiminnot 
 
 ### Testaus
@@ -44,3 +48,11 @@ Tiedostoon [checkstyle.xml](https://github.com/leopekkas/ot-harjoitustyo/blob/ma
 mvn jxr:jxr checkstyle:checkstyle
 ```
 Mahdolliset virheilmoitukset selviävät avaamalla selaimella tiedoston _target/site/checkstyle.html_
+
+### JavaDoc
+
+JavaDoc generoidaan komennolla 
+```
+mvn javadoc:javadoc
+```
+JavaDocia voi tarkastella avaamalla selaimella tiedoston _target/site/apidocs/index.html_
