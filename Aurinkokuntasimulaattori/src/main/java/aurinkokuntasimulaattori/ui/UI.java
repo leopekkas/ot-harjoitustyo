@@ -38,8 +38,6 @@ import javafx.stage.FileChooser;
 
 import javafx.scene.paint.Color;
 
-import javafx.geometry.Orientation;
-
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

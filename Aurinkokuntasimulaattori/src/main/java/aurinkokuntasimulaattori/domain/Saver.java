@@ -23,6 +23,7 @@ public class Saver {
      * Metodilla tallennetaan simulaation senhetkinen data käyttäjän 
      * valitsemaan tiedostoon.
      * 
+     * @param savefile Syötteenä annettu tiedosto, jonne data halutaan tallentaa
      * @param planeetat Syötteenä annetaan lista tallennettavista planeetoista
      */
     public void saveSimulationData(File savefile, ArrayList<Planet> planeetat) {

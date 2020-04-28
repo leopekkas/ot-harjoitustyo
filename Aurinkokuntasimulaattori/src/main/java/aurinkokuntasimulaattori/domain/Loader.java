@@ -17,7 +17,7 @@ public class Loader {
     ArrayList<Planet> lista;
     
     public Loader() {
-        this.lista = new ArrayList<Planet>();
+        this.lista = new ArrayList();
     }
     
     /**
