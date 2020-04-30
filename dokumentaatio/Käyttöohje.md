@@ -20,7 +20,7 @@ _Presets_-menuvalikosta pääset käsiksi valmiiksi pyöritettäviin malleihin, 
 
 #### Yksittäisten kappaleiden poistaminen simulaatiosta
 
-_Custom_-napin alta löytyvä _clear_-nappi mahdollistaa yksittäisen planeetan poistamisen simulaatiosta. Planeetan saa poistettua klikkaamalla halutun planeetan nappia, jossa lukevat kys. kappaleen tunnistetiedot. Käytännön syistä poistettavien kappaleiden näkymässä lukee vain kappaleiden nimet, massat ja halkaisijat, joten Randomisoidun valmiin mallin kanssa kyseinen toiminnallisuus ei ole kovinkaan hyödyllinen (kaikki planeetat ovat näissä nimetty _null_-arvoiksi). Kannattaa siis omia simulaatioita kirjoittaessaan nimetä planeetat järkevästi, jotta niitten poistaminen sujuisi helposti.
+_Custom_-napin alta löytyvä _clear_-nappi mahdollistaa yksittäisen planeetan poistamisen simulaatiosta. Planeetan saa poistettua klikkaamalla halutun planeetan nappia, jossa lukevat kys. kappaleen tunnistetiedot. Käytännön syistä poistettavien kappaleiden näkymässä lukee vain kappaleiden nimet, massat ja halkaisijat, joten Randomisoidun valmiin mallin kanssa kyseinen toiminnallisuus ei ole kovinkaan hyödyllinen (kaikki planeetat ovat näissä nimetty _null_-arvoisiksi). Omia simulaatioita kirjoittaessaan kannattanee siis nimetä planeetat järkevästi, jotta niiden poistaminen sujuu toiminnallisuutta tarvittaessa kivuttomasti.
 
 #### Simulaation aika-askeleen muuttaminen
 
@@ -32,7 +32,16 @@ _File_ menuvalikosta löydät Save ja Load -napit, joilla voit tallentaa simulaa
 
 _Save_-nappi avaa tiedostoselaimen, jonka avulla voit navigoida toivomaasi kansioon ja tekemään sinne haluamasi nimisen tekstitiedoston tallennetulle datalle. 
 
-_Load_-napilla avaa näkymään myös tiedostoselaimen, josta voit valita haluamasi tiedoston ladattavaksi. Huomaathan, että tiedon tulee olle täsmälleen oikeassa muodossa, jotta simulaatio osaa sen lukea. Tekstin toivottu muoto tulee olla muodossa Planeetan nimi, paikan x-koordinaatti, y- koordinaatti, nopeuden x-suuntainen vektori, nopeuden y-suuntainen vektori, kappaleen massa, kappaleen säde. Kappaleen nimi on String-oliomuuttuja ja muut tiedot Double-muuttujia. Kappaleiden tiedot erotetaan rivinvaihdolla. 
+_Load_-napilla avaa näkymään myös tiedostoselaimen, josta voit valita haluamasi tiedoston ladattavaksi. Huomaathan, että tiedon tulee olle täsmälleen oikeassa muodossa, jotta simulaatio osaa sen lukea. Tekstin toivottu muoto tulee olla muodossa:
+- Planeetan nimi 
+- Paikan x-koordinaatti
+- y- koordinaatti 
+- Nopeusvektorin x-suuntainen komponentti
+- Nopeusvektorin y-suuntainen komponentti
+- Planeetan massa
+- Planeetan säde
+
+Kappaleen nimi on String-oliomuuttuja ja muut tiedot Double-muuttujia. Kappaleiden tiedot erotetaan rivinvaihdolla. 
 
 Alla ladattavan esimerkkitiedoston sisältö:
 ```
