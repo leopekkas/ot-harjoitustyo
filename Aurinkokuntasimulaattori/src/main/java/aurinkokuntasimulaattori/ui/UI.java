@@ -26,17 +26,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font; 
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight; 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.stage.Popup;
 
 import javafx.stage.FileChooser;
-
-import javafx.scene.paint.Color;
+import javafx.geometry.Insets;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -61,10 +64,16 @@ public class UI extends Application {
     Saver saver = new Saver();
     FileChooser filechooser = new FileChooser();
     
-    // Tällä lasken käytyjen steppien lukumäärää
+    // Tällä lasken käytyjen steppien (ja ajan) kokonaisuuksia
     private long stepcounter;
     private double timecounter;
     private Label stepTimeLabel;
+    
+    // Kertoo näytetäänkö simulaatioikkunassa kappaleiden nimet
+    private boolean nameDisplay = false;
+    
+    // Onko simulaatio käynnissä
+    private boolean stopped = true;
     
     public static void main(String[] args) {
         launch(args);
@@ -100,91 +109,25 @@ public class UI extends Application {
        
     }
     
-    public Group informationText() {
-        Text otsikko = new Text();
-        Text text = new Text();
-        Text text2 = new Text();
-        
-        otsikko.setText("Informaatiota kontrolleista");
-        otsikko.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        otsikko.setUnderline(true);
-        
-        text.setText("Valmiita simulaatiomalleja voit tarkastella napin 'Presets' alta.");
-        
-        text2.setText("Tarkemmat ohjeet simulaation käyttöön löydät " +
-                "GitHub -repositoriosta,\n tähän ei saakkaan helposti " +
-                "paljoa tekstiä");
-        
-        otsikko.setX(30);
-        otsikko.setY(50);
-        
-        text.setX(30);
-        text.setY(80);
-        
-        text2.setX(30);
-        text2.setY(110);
-        
-        Group root = new Group(otsikko, text, text2);
-        
-        return root;
-    }
-    
     public VBox setupMenuBar(Pane mainBorderPane, Stage stage) {
         Menu fileMenu = new Menu("File");
-        Menu menu = new Menu("Info");
         Menu simMenu = new Menu("Simulation");
         Menu presets = new Menu("Presets");
         Menu custom = new Menu("Custom");
         Menu timestepmenu = new Menu("Timestep length");
         
         setUpFileMenu(fileMenu, stage);
-        setUpInfoBar(menu);
         setUpSimButtons(simMenu, stage);
         setUpPresets(presets);
         setUpStepSlider(timestepmenu); 
         setUpCustomize(custom);
         
         MenuBar mb = new MenuBar();
-        mb.getMenus().addAll(fileMenu, menu, simMenu, presets, custom, timestepmenu);
+        mb.getMenus().addAll(fileMenu, simMenu, presets, custom, timestepmenu);
         
         VBox vb = new VBox(mb);
         
         return vb;
-    }
-    
-    public Group physicsText() {
-        Text otsikko = new Text();
-        Text text = new Text();
-        Text text2 = new Text();
-        Text text3 = new Text();
-        
-        otsikko.setText("Physics behind the simulation");
-        otsikko.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
-        otsikko.setUnderline(true);
-        
-        text.setText("Newton kehitti gravitaatioteorian, " +
-                "jota noudatetaan tänäkin päivänä!!");
-        
-        text2.setText("Tarkemmat kaavat ja matemaattiset perusteet \n " +
-                "tulen sijoittamaan GitHub kansioon I think");
-        
-        text3.setText("Graphic design is my passion");
-        
-        otsikko.setX(30);
-        otsikko.setY(50);
-        
-        text.setX(30);
-        text.setY(80);
-        
-        text2.setX(30);
-        text2.setY(110);
-        
-        text3.setX(30);
-        text3.setY(150);
-        
-        Group root = new Group(otsikko, text, text2, text3);
-        
-        return root;
     }
     
     private Canvas createSimCanvas() {
@@ -225,7 +168,9 @@ public class UI extends Application {
         graphics.fillRect(0, 0, graphics.getCanvas().getWidth(), graphics.getCanvas().getHeight());
         
         for (Planet planet : simulaatio.getPlanets()) {
-            drawPlanet(graphics, planet, 0, 1);
+            if (!planet.isDeleted()) {
+                drawPlanet(graphics, planet, 0, 1);
+            }
         }
     }
     
@@ -247,7 +192,17 @@ public class UI extends Application {
         
         graphics.setFill(color);
         
+        double pituus = 0;
+        
+        if (kappale.getName() != null) {
+            pituus = kappale.getName().length();
+        }
         graphics.fillOval(pos.x, pos.y, radius, radius);
+        
+        if (nameDisplay == true) {
+            graphics.fillText(kappale.getName(), pos.x - pituus,
+                pos.y + kappale.getRadius() + 15);
+        }
     }
     
     private void simulateStep(double step) {
@@ -272,6 +227,7 @@ public class UI extends Application {
         play.addEventHandler(ActionEvent.ACTION, event -> {
             if (simulaatio.getPlanets().size() > 0) {
                 popup.hide();
+                stopped = false;
                 simulationTimeline.play();
             } else {
                 if (!popup.isShowing()) {
@@ -282,6 +238,7 @@ public class UI extends Application {
         
         stop.addEventHandler(ActionEvent.ACTION, event -> {
             simulationTimeline.stop();
+            stopped = true;
         });
         
         step.addEventHandler(ActionEvent.ACTION, event -> {
@@ -290,43 +247,6 @@ public class UI extends Application {
             }
             simulateStep(timestep);
             drawSim();
-        });
-    }
-    
-    public void setUpInfoBar(Menu menu) {
-        MenuItem info = new MenuItem("Info");
-        MenuItem physics = new MenuItem("Physics behind the simulation");
-        menu.getItems().addAll(info, physics);
-        
-        // Infonapin toiminnallisuus
-        info.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Group root = informationText();                
-                Scene info = new Scene(root, 500, 200);                
-                Stage infostage = new Stage();
-                
-                infostage.setTitle("Information about the simulation");
-                
-                infostage.setScene(info);
-                
-                infostage.show();
-            }
-        });
-        
-        physics.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Group root = physicsText();                
-                Scene info = new Scene(root, 500, 200);                
-                Stage info2stage = new Stage();
-                
-                info2stage.setTitle("The physics behind the simulation");
-                
-                info2stage.setScene(info);
-                
-                info2stage.show();
-            }
         });
     }
     
@@ -427,9 +347,9 @@ public class UI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 simulaatio.clear();
-                Planet toinen = new Planet("Star1", new Vector2(750, 450), new Vector2(20.5, 0), 400000, 30);
-                Planet kolmas = new Planet("Star2", new Vector2(750, 500), new Vector2(-20.5, 0), 400000, 30);
-                Planet distant = new Planet("Star3", new Vector2(750, 100), new Vector2(15, 0), 10000, 15);
+                Planet toinen = new Planet("Big1", new Vector2(750, 450), new Vector2(20.5, 0), 400000, 30);
+                Planet kolmas = new Planet("Big2", new Vector2(750, 500), new Vector2(-20.5, 0), 400000, 30);
+                Planet distant = new Planet("I'm smol", new Vector2(750, 100), new Vector2(15, 0), 10000, 15);
 
                 simulaatio.add(toinen);
                 simulaatio.add(kolmas);
@@ -487,22 +407,47 @@ public class UI extends Application {
     public void setUpCustomize(Menu menu) {
         MenuItem add = new MenuItem("Add an object");
         MenuItem delete = new MenuItem("Clear a single object");
-        menu.getItems().addAll(add, delete);
+        MenuItem disp = new MenuItem("Show planet names");
+        menu.getItems().addAll(add, delete, disp);
         userDeletePlanet(delete);
         userAddPlanet(add);
+        userDisplayNames(disp);
     }
     
     public void userDeletePlanet(MenuItem delete) {
         delete.setOnAction(event -> {
-            Group root = new Group();
-            Scene deleteScene = new Scene(root, 500, 200);
             Stage newStage = new Stage();
             GridPane gridi = new GridPane();
+            gridi.setPadding(new Insets(5));
+            gridi.setHgap(5);
+            gridi.setVgap(5);
             
-            newStage.setTitle("Clear a planet");
+            newStage.setTitle("Click to clear a planet");
             
             int rowIndex = 0;
             int columnIndex = 0;
+            
+            for (Planet p : simulaatio.getPlanets()) {
+                Button deleteButton = new Button(p.getName() + ", Mass: " + p.getMass()
+                        + ", Radius: " + p.getRadius());
+                deleteButton.setMinWidth(400);
+                deleteButton.setMaxWidth(400);
+                deleteButton.setMinHeight(25);
+                deleteButton.setMaxHeight(25);
+                gridi.add(deleteButton, 2, rowIndex++);
+                deleteButton.setOnAction(e -> {
+                    p.delete();
+                    drawSim();
+                });
+            }
+            
+            ScrollPane sp = new ScrollPane(gridi);
+            sp.setMaxHeight(300);
+            sp.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
+            sp.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            
+            newStage.setScene(new Scene(sp));
+            newStage.show();
         });
     }
     
@@ -556,15 +501,30 @@ public class UI extends Application {
         });
     }
     
+    public void userDisplayNames(MenuItem disp) {
+        disp.setOnAction(event -> {
+            if (nameDisplay == true) {
+                nameDisplay = false;
+                disp.setText("Show planet names");
+            } else {
+                nameDisplay = true;
+                disp.setText("Hide planet names");
+            }
+        });
+    }
+    
     private void updateStepCounter() {
         String s = String.valueOf(stepcounter);
         String d = String.valueOf((int)timecounter);
+        
         stepTimeLabel.setText("Elapsed timesteps: " + s + "        Elapsed time: " + d);
     }
     
+    // Vähän tynkä metodi
     private File chooseLoadFile(Stage stage) {
         File toLoad = filechooser.showOpenDialog(stage);
         return toLoad;
     }
+    
     
 }

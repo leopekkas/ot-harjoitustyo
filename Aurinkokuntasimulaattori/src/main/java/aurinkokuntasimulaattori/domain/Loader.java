@@ -51,6 +51,7 @@ public class Loader {
         return this.lista;
     }
     
+    // Tähän ois varmasti joku järkevämpi tapa mutta toimii
     private Planet makePlanet(String rivi) {
         String[] osat = rivi.split(", ");
         String name = osat[0];

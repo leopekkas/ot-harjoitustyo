@@ -126,7 +126,12 @@ public class Planet {
 
     public boolean isDeleted() {
         return isDeleted;
-    } 
+    }
+    
+    public boolean equals(Planet other) {
+        return (this.name == other.name && this.mass == other.mass &&
+                this.radius == other.radius);
+    }
     
     /**
      * Kappaleen poistamisen metodi
