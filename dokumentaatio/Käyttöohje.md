@@ -6,8 +6,6 @@ Lataa tiedosto [aurinkokuntasimulaattori.jar](https://github.com/leopekkas/ot-ha
 
 Sovelluksessa näkyy aluksi musta ruutu, jonka vasemmasta ylänurkasta löydät menuvalikon. 
 
-Menusta ensimmäisenä vasemmalta löydät infonapin, josta saat tietoa sovelluksen toiminnallisuuksista. (Infotekstit ovat kuitenkin hyvin lyhyitä tällä hetkellä ja tämä toiminnallisuus luultavasti poistuu myöhemmissä versioissa)
-
 #### Simulation-nappi
 
 _Simulation_-menuvalikon alta voit ajaa valittua simulaatiota start-napilla, pysäyttää simulaation stop-napilla ja käydä yksittäisiä aika-askelia step-napilla.
