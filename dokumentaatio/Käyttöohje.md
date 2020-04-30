@@ -12,9 +12,15 @@ Menusta ensimmäisenä vasemmalta löydät infonapin, josta saat tietoa sovelluk
 
 _Simulation_-menuvalikon alta voit ajaa valittua simulaatiota start-napilla, pysäyttää simulaation stop-napilla ja käydä yksittäisiä aika-askelia step-napilla.
 
-#### Presets-nappi
+#### Simulaation kappaleiden lisääminen ja poistaminen
+
+#### Valmiiden simulaatiomallien ajaminen
 
 _Presets_-menuvalikosta pääset käsiksi valmiiksi pyöritettäviin malleihin, jotka kuvaavat jotain oleellista kiertorataa tai vastaavaa.
+
+#### Yksittäisten kappaleiden poistaminen simulaatiosta
+
+_Custom_-napin alta löytyvä _clear_-nappi mahdollistaa yksittäisen planeetan poistamisen simulaatiosta. Planeetan saa poistettua klikkaamalla halutun planeetan nappia, jossa lukevat kys. kappaleen tunnistetiedot. Käytännön syistä poistettavien kappaleiden näkymässä lukee vain kappaleiden nimet, massat ja halkaisijat, joten Randomisoidun valmiin mallin kanssa kyseinen toiminnallisuus ei ole kovinkaan hyödyllinen (kaikki planeetat ovat näissä nimetty _null_-arvoiksi). Kannattaa siis omia simulaatioita kirjoittaessaan nimetä planeetat järkevästi, jotta niitten poistaminen sujuisi helposti.
 
 #### Simulaation aika-askeleen muuttaminen
 
