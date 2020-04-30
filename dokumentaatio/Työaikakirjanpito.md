@@ -16,4 +16,5 @@
 | 21.4. | 3    | Jar-tiedoston setup ja release, sekvenssikaavio |
 | 26.4. | 1    | Pomin säätämistä, että ohjelma ajaa javan myöhemmilläkin versioilla |
 | 28.4. | 4    | Pysyväistallennuksen ja tiedostojen lataamisen ominaisuudet ja testit näille |
-| Yht.  | 30   |
+| 30.4. | 2    | Interface kappaleiden poistamista varten, kappaleiden nimien näyttäminen käyttöliittymässä |
+| Yht.  | 32   |
