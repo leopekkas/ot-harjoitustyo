@@ -16,9 +16,11 @@ _Simulation_-menuvalikon alta voit ajaa valittua simulaatiota start-napilla, pys
 
 _Presets_-menuvalikosta pääset käsiksi valmiiksi pyöritettäviin malleihin, jotka kuvaavat jotain oleellista kiertorataa tai vastaavaa.
 
-#### Yksittäisten kappaleiden poistaminen simulaatiosta
+#### Simulaation oma kustomisointi
 
-_Custom_-napin alta löytyvä _clear_-nappi mahdollistaa yksittäisen planeetan poistamisen simulaatiosta. Planeetan saa poistettua klikkaamalla halutun planeetan nappia, jossa lukevat kys. kappaleen tunnistetiedot. Käytännön syistä poistettavien kappaleiden näkymässä lukee vain kappaleiden nimet, massat ja halkaisijat, joten Randomisoidun valmiin mallin kanssa kyseinen toiminnallisuus ei ole kovinkaan hyödyllinen (kaikki planeetat ovat näissä nimetty _null_-arvoisiksi). Omia simulaatioita kirjoittaessaan kannattanee siis nimetä planeetat järkevästi, jotta niiden poistaminen sujuu toiminnallisuutta tarvittaessa kivuttomasti.
+_Custom_-napin alta löytyvä _clear_-nappi mahdollistaa yksittäisen planeetan poistamisen simulaatiosta. Planeetan saa poistettua klikkaamalla halutun planeetan nappia, jossa lukevat kys. kappaleen tunnistetiedot. Käytännön syistä poistettavien kappaleiden näkymässä lukee vain kappaleiden nimet, massat ja halkaisijat, joten Randomisoidun valmiin mallin kanssa kyseinen toiminnallisuus ei ole kovinkaan hyödyllinen (kaikki planeetat ovat näissä nimetty _null_-arvoisiksi). Omia simulaatioita kirjoittaessaan kannattanee siis nimetä planeetat järkevästi, jotta niiden poistaminen sujuu toiminnallisuutta tarvittaessa kivuttomasti. Kokonaisia uusia simulaatioita lisättäessä kannatta toiminnallisuus suorittaa tekstitiedoston avulla, josta tarkemmin alempana kohdassa _Tietojen tallennus_.
+
+Halutessasi voit näyttää simulaation kappaleiden nimet osana simulaatiota _Show planet names_-napilla. Samasta napista voit piilottaa kyseisen toiminnallisuuden.
 
 #### Simulaation aika-askeleen muuttaminen
 
