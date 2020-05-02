@@ -44,6 +44,8 @@ public class Loader {
                 }
                 content = br.readLine();
             }
+            
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error reading the file");
@@ -62,7 +64,13 @@ public class Loader {
             double vx = Double.valueOf(osat[3]);
             double vy = Double.valueOf(osat[4]);
             double mass = Double.valueOf(osat[5]);
+            if (mass < 0) {
+                return null;
+            }
             double radius = Double.valueOf(osat[6]);
+            if (radius < 0) {
+                return null;
+            }
             Vector2 pos = new Vector2(px, py);
             Vector2 vel = new Vector2(vx, vy);
 

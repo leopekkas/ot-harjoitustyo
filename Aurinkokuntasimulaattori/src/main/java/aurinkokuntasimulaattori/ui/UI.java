@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javafx.application.Application; 
+import javafx.application.Platform; 
 import javafx.scene.Group; 
 import javafx.scene.Scene; 
 import javafx.stage.Stage;
@@ -26,13 +27,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Text;
-import javafx.scene.text.Font; 
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight; 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -40,6 +36,7 @@ import javafx.stage.Popup;
 
 import javafx.stage.FileChooser;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -55,11 +52,12 @@ import javafx.util.Duration;
 public class UI extends Application {
     
     private double timestep;
+    private double timeUnit;
     private AnimationTimer mainLoop;
     private Canvas simcanvas;
     
     private final SimulationPhysics simulaatio = new SimulationPhysics();
-    Timeline simulationTimeline = new Timeline();
+    Timeline simulationTimeline;
     Loader loader = new Loader();
     Saver saver = new Saver();
     FileChooser filechooser = new FileChooser();
@@ -67,6 +65,7 @@ public class UI extends Application {
     // Tällä lasken käytyjen steppien (ja ajan) kokonaisuuksia
     private long stepcounter;
     private double timecounter;
+    private double yearcounter;
     private Label stepTimeLabel;
     
     // Kertoo näytetäänkö simulaatioikkunassa kappaleiden nimet
@@ -75,15 +74,20 @@ public class UI extends Application {
     // Onko simulaatio käynnissä
     private boolean stopped = true;
     
+    // Zoomtason suuruus
+    private double scale;
+    
     public static void main(String[] args) {
         launch(args);
     }
     
     @Override
     public void start(Stage stage) throws Exception {
-        
+        simulationTimeline = new Timeline();
         stepcounter = 0;
         timecounter = 0;
+        timeUnit = 86400;
+        scale = 1;
         filechooser.setTitle("Choose the file to use");
         
         Group root = new Group();
@@ -95,7 +99,7 @@ public class UI extends Application {
         simcanvas = createSimCanvas();
         mainBorderPane.setCenter(simcanvas);
         
-        timestep = 0.4;
+        timestep = timeUnit;
         simulationRendering();
         
         VBox vb = setupMenuBar(mainBorderPane, stage);
@@ -106,7 +110,7 @@ public class UI extends Application {
         
         stage.setScene(scene);
         stage.show();
-       
+        
     }
     
     public VBox setupMenuBar(Pane mainBorderPane, Stage stage) {
@@ -115,15 +119,22 @@ public class UI extends Application {
         Menu presets = new Menu("Presets");
         Menu custom = new Menu("Custom");
         Menu timestepmenu = new Menu("Timestep length");
+        Menu timestepScale = new Menu("Timestep unit");
+        Menu scalingMenu = new Menu("Scaling tool");
+        //Menu overRide = new Menu("Override methods");
         
         setUpFileMenu(fileMenu, stage);
         setUpSimButtons(simMenu, stage);
         setUpPresets(presets);
         setUpStepSlider(timestepmenu); 
+        setUpTimeUnit(timestepScale);
+        setUpScaleSlider(scalingMenu);
+        //setUpOverRide(overRide);
         setUpCustomize(custom);
         
         MenuBar mb = new MenuBar();
-        mb.getMenus().addAll(fileMenu, simMenu, presets, custom, timestepmenu);
+        mb.getMenus().addAll(fileMenu, simMenu, presets, custom, timestepmenu,
+                timestepScale, scalingMenu);
         
         VBox vb = new VBox(mb);
         
@@ -131,7 +142,7 @@ public class UI extends Application {
     }
     
     private Canvas createSimCanvas() {
-        Canvas canvas = new Canvas(1500, 950);
+        Canvas canvas = new Canvas(1500, 900);
         return canvas;
     }
     
@@ -149,16 +160,30 @@ public class UI extends Application {
     }
     
     private Slider timestepSlider() {
-        Slider step = new Slider(0.0, 1.0, 1);
+        Slider step = new Slider(0.0, 20.0, 1);
         step.setShowTickLabels(true);
         step.setShowTickMarks(true);
-        step.setMajorTickUnit(0.1);
-        
+        step.setMajorTickUnit(5);
         step.valueProperty().addListener(event -> {
-            timestep = step.getValue();
+            timestep = step.getValue() * timeUnit;
         });
         
         return step;
+    }
+    
+    private Slider scaleSlider() {
+        Slider scaler = new Slider(0.1, 10.0, 2);
+        scaler.setMinWidth(500);
+        scaler.setShowTickLabels(true);
+        scaler.setShowTickMarks(true);
+        scaler.setMajorTickUnit(2);
+        
+        scaler.valueProperty().addListener(event -> {
+            scale = scaler.getValue();
+            drawSim();
+        });
+        
+        return scaler;
     }
     
     private void drawSim() {
@@ -177,14 +202,19 @@ public class UI extends Application {
     private void drawPlanet(GraphicsContext graphics, Planet kappale, int tail, double tailfactor) {
         double radius = Math.max(kappale.getRadius(), 1);
         Vector2 pos = kappale.getPos();
+        // Muutetaan oikea etäisyys pikseleille vastaavaksi
+        double uiXpos = pos.x/1.496E11 * 100/scale + 750;
+        double uiYpos = pos.y/1.496E11 * 100/scale + 450;
         Color color = Color.WHITE;
         
         List<Vector2> oldPos = kappale.getOldPos();
         if (oldPos != null) {
             for (int i = 0; i < Math.min(tail, oldPos.size()); i++) {
                 Vector2 tailPos = oldPos.get(i);
+                double uiTailXpos = tailPos.x/1.496E11 * 80 + 750;
+                double uiTailYpos = tailPos.y/1.496E11 * 80 + 450;
                 graphics.setStroke(Color.WHITE);
-                graphics.strokeLine(pos.x, pos.y, tailPos.x, tailPos.y);
+                graphics.strokeLine(uiXpos, uiYpos, uiTailXpos, uiTailYpos);
                 
                 pos = tailPos;
             }
@@ -197,17 +227,18 @@ public class UI extends Application {
         if (kappale.getName() != null) {
             pituus = kappale.getName().length();
         }
-        graphics.fillOval(pos.x, pos.y, radius, radius);
+        graphics.fillOval(uiXpos, uiYpos, radius / scale, radius / scale);
         
         if (nameDisplay == true) {
-            graphics.fillText(kappale.getName(), pos.x - pituus,
-                pos.y + kappale.getRadius() + 15);
+            graphics.fillText(kappale.getName(), uiXpos - pituus,
+                uiYpos + kappale.getRadius() / scale + 15);
         }
     }
     
     private void simulateStep(double step) {
         stepcounter++;
-        timecounter += step;
+        timecounter += step/86400;
+        yearcounter += (step/86400)/365;
         updateStepCounter();
         simulaatio.step(step, 0);        
     }
@@ -257,9 +288,13 @@ public class UI extends Application {
         menu.getItems().addAll(save, load);
         
         save.setOnAction(event -> {
-            FileChooser chooser = new FileChooser();
-            File savefile = chooser.showSaveDialog(null);
-            saver.saveSimulationData(savefile, simulaatio.getPlanets());
+            try  {
+                FileChooser chooser = new FileChooser();
+                File savefile = chooser.showSaveDialog(null);
+                saver.saveSimulationData(savefile, simulaatio.getPlanets());
+            } catch (NullPointerException e) {
+                System.out.println("No file picked");
+            }    
         });
         
         load.setOnAction(event -> {
@@ -273,8 +308,11 @@ public class UI extends Application {
                 stepcounter = 0;
                 timecounter = 0;
                 drawSim();
-            } catch (IOException e) {
+            } catch (IOException ioe) {
                 System.out.println("Error");
+                ioe.printStackTrace();
+            } catch (NullPointerException e) {
+                System.out.println("No file picked");
             }
             
         });
@@ -282,21 +320,15 @@ public class UI extends Application {
     
     public void setUpPresets(Menu menu) {
         MenuItem preset1 = new MenuItem("Empty space (clean canvas)");
-        MenuItem preset2 = new MenuItem("Inner Planets of the Solar System");
-        MenuItem preset3 = new MenuItem("Binary star system with a distant third star orbiting");
-        MenuItem preset4 = new MenuItem("Gas giant with a few moons");
-        MenuItem random10 = new MenuItem("10 random objects");
-        MenuItem random100 = new MenuItem("100 random objects");
-        MenuItem random200 = new MenuItem("200 random objects :-)");
-        menu.getItems().addAll(preset1, preset2, preset3, random10, random100, random200);
+        MenuItem inners = new MenuItem("Inner Planets of the Solar System");
+        MenuItem af = new MenuItem("Binary star system with a distant third star orbiting");
+        MenuItem solarSystem = new MenuItem("The Solar System");
+        menu.getItems().addAll(preset1, solarSystem, inners, af);
         // Lisää preset4 kun saat valmiiksi
         preset1Content(preset1);
-        preset2Content(preset2);
-        preset3Content(preset3);
-        preset4Content(preset4);
-        presetRandomContent(random10, 10);
-        presetRandomContent(random100, 100);
-        presetRandomContent(random200, 200);
+        innerContent(inners);
+        alfaCentauriContent(af);
+        solarSystemContent(solarSystem);
     }
     
     public void setUpStepSlider(Menu menu) {
@@ -308,6 +340,156 @@ public class UI extends Application {
         menu.getItems().add(stepperItem);
     }
     
+    public void setUpScaleSlider(Menu menu) {
+        Slider scaler = scaleSlider();
+        menu.getItems().add(new SeparatorMenuItem());
+        
+        CustomMenuItem scalerItem = new CustomMenuItem(scaler);
+        scalerItem.setHideOnClick(false);
+        menu.getItems().add(scalerItem);
+    }
+    
+    public void setUpTimeUnit(Menu menu) {
+        MenuItem sec = new MenuItem("Seconds");
+        MenuItem min = new MenuItem("Minutes");
+        MenuItem hours = new MenuItem("Hours");
+        MenuItem days = new MenuItem("Days");
+        MenuItem months = new MenuItem("Months");
+        MenuItem y = new MenuItem("Years");
+        sec.setOnAction(events-> {
+            timeUnit = 1;
+            timestep = timeUnit;
+        });
+        min.setOnAction(eventm-> {
+            timeUnit = 60;
+            timestep = timeUnit;
+        });
+        hours.setOnAction(eventh-> {
+            timeUnit = 3600;
+            timestep = timeUnit;
+        });
+        days.setOnAction(eventd-> {
+            timeUnit = 86400;
+            timestep = timeUnit;
+        });
+        //TODO: turhaa copypasteemista
+        months.setOnAction(eventm-> {
+            Stage dialogStage = new Stage();
+            
+            dialogStage.setTitle("Warning");
+            VBox vbox = new VBox(new Text("Warning! Using large timestep values \nmight "
+                    + "cause heavy instability in the orbits"));
+            Button cancel = new Button("Cancel");
+            Button ok = new Button("Continue");
+            vbox.getChildren().addAll(cancel, ok);
+            
+            ok.setOnAction(event ->{
+                timeUnit = 2629743.83;
+                timestep = timeUnit;
+                dialogStage.close();
+            });
+            
+            cancel.setOnAction(event ->{
+                dialogStage.close();
+            });
+            
+            vbox.setAlignment(Pos.CENTER);
+            vbox.setPadding(new Insets(15));
+            vbox.setSpacing(5);
+
+            dialogStage.setScene(new Scene(vbox));
+            dialogStage.show();
+        });
+        y.setOnAction(eventy-> {
+            Stage dialogStage = new Stage();
+            
+            dialogStage.setTitle("Warning");
+            VBox vbox = new VBox(new Text("Warning! Using a large timestep value \nwill "
+                    + "cause heavy instability in the orbits"));
+            Button cancel = new Button("Cancel");
+            Button ok = new Button("Continue");
+            vbox.getChildren().addAll(cancel, ok);
+            
+            ok.setOnAction(event ->{
+                timeUnit = 31556926;
+                timestep = timeUnit;
+                dialogStage.close();
+            });
+            
+            cancel.setOnAction(event ->{
+                dialogStage.close();
+            });
+            
+            vbox.setAlignment(Pos.CENTER);
+            vbox.setPadding(new Insets(15));
+            vbox.setSpacing(5);
+
+            dialogStage.setScene(new Scene(vbox));
+            dialogStage.show();
+        });
+        
+        menu.getItems().addAll(sec, min, hours, days, months, y);
+    }
+    
+    /*
+    public void setUpOverRide(Menu menu) {
+        MenuItem timestepOR = new MenuItem("Set a timestep");
+        MenuItem scaleOR = new MenuItem("Set a scale");
+        
+        overrideMethod(timestepOR, "timestep");
+        overrideMethod(scaleOR, "scale");
+        
+        menu.getItems().addAll(timestepOR, scaleOR);
+    }
+    
+    
+    
+    public void overrideMethod(MenuItem item, String number) {
+        item.setOnAction(event -> {
+            Group root = new Group();                
+            Scene textPrompt = new Scene(root, 200, 100);                
+            Stage newStage = new Stage();
+            GridPane gridi = new GridPane();
+                
+            newStage.setTitle("Insert a number");
+            root.getChildren().add(gridi);
+
+            TextField text = new TextField("Value of the " + number + " to insert");
+            text.setMinWidth(300);
+            
+            gridi.add(text, 0, 0);
+                
+            Button confirm = new Button("Confirm");
+            gridi.add(confirm, 0, 1);
+            
+            confirm.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    String value = text.getText();
+                    try {
+                        // Tästä tulikin ihan tyhmä mut saapi olla
+                        double valueDouble = Double.parseDouble(value);
+                        if (valueDouble < 0 || valueDouble > 1000) {
+                            text.setText("The number is too large");
+                        } else {
+                            if (number == "timestep") {
+                                timestep = valueDouble;
+                            } else if (number == "scale") {
+                                scale = valueDouble;
+                            }
+                        }    
+                    } catch (Exception ne) {
+                        text.setText("Please insert a number");
+                    }
+                }
+            });
+            newStage.setScene(textPrompt);
+                
+            newStage.show();
+        });
+    }
+    */
+
     public void preset1Content(MenuItem preset1) {
         preset1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -320,21 +502,63 @@ public class UI extends Application {
         });
     }
     
-    public void preset2Content(MenuItem preset) {
+    public void solarSystemContent(MenuItem preset) {
         preset.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 simulaatio.clear();
-                Planet toinen = new Planet("Aurinko", new Vector2(750, 500), new Vector2(0, 0), 400000, 30);
+                scale = 1.2;
+                Planet aurinko = new Planet("Sun", new Vector2(0, 0), new Vector2(0, 0), 2E30, 13);
+                
+                Planet maa = new Planet("Earth", new Vector2(1.496E11, 0), new Vector2(0, 30000), 5.972E24, 4);
+                Planet mars = new Planet("Mars", new Vector2(2.1641E11, 0), new Vector2(0, 24130), 6.4E23, 3);
+                Planet venus = new Planet("Venus", new Vector2(1.08E11, 0), new Vector2(0, 35021), 4.87E24, 3.5);
+                Planet merkurius = new Planet("Mercury", new Vector2(7.5E10, 0), new Vector2(0, 41004), 3.3E23, 1);
+                
+                Planet saturn = new Planet("Saturn", new Vector2(14.3E11, 0), new Vector2(0, 9680), 6.6834E26, 7.5);
+                Planet jupiter = new Planet("Jupiter", new Vector2(7.79E11, 0), new Vector2(0, 13070), 1.898E27, 9);
+                Planet uranus = new Planet("Uranus", new Vector2(2.871E12, 0), new Vector2(0, 6835.2), 8.686E25, 7);
+                Planet neptune = new Planet("Neptune", new Vector2(4.4989E12, 0), new Vector2(0, 5477.8), 1.024E26, 7);
+                Planet pluto = new Planet("Pluto", new Vector2(5.909E12, 0), new Vector2(0, 4749), 1.290E22, 1);
+                
+                // TODO: addAll metodi simulaatiolle
+                simulaatio.add(maa);
+                simulaatio.add(mars);
+                simulaatio.add(venus);
+                simulaatio.add(merkurius);
+                
+                simulaatio.add(jupiter);
+                simulaatio.add(saturn);
+                simulaatio.add(uranus);
+                simulaatio.add(neptune);
+                simulaatio.add(pluto);
+                
+                simulaatio.add(aurinko);
+                stepcounter = 0;
+                timecounter = 0;
+                drawSim();
+            }
+        });
+    }
+    
+    public void innerContent(MenuItem preset) {
+        preset.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                simulaatio.clear();
+                scale = 0.5;
+                Planet toinen = new Planet("Sun", new Vector2(0, 0), new Vector2(0, 0), 2E30, 20.0);
         
-                Planet maa = new Planet("Maa", new Vector2(760, 400), new Vector2(20, 0), 150, 15);
-                Planet kolmas = new Planet("Mars", new Vector2(760, 900), new Vector2(-10, 0), 100, 10);
-                Planet neljas = new Planet("Merkurius", new Vector2(800, 513), new Vector2(0, 26.3), 10, 5);
-
+                Planet maa = new Planet("Earth", new Vector2(1.496E11, 0), new Vector2(0, 30000), 5.972E24, 10);
+                Planet kolmas = new Planet("Mars", new Vector2(2.1641E11, 0), new Vector2(0, 24130), 6.4E23, 6);
+                Planet neljas = new Planet("Venus", new Vector2(1.08E11, 0), new Vector2(0, 35021), 4.87E24, 9);
+                Planet viides = new Planet("Mercury", new Vector2(6.5E10, 0), new Vector2(0, 42004), 3.3E23, 4);
+                
                 simulaatio.add(maa);
                 simulaatio.add(toinen);
                 simulaatio.add(kolmas);
                 simulaatio.add(neljas);
+                simulaatio.add(viides);
                 stepcounter = 0;
                 timecounter = 0;
                 drawSim();
@@ -342,61 +566,19 @@ public class UI extends Application {
         });
     }
     
-    public void preset3Content(MenuItem preset) {
+    public void alfaCentauriContent(MenuItem preset) {
         preset.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 simulaatio.clear();
-                Planet toinen = new Planet("Big1", new Vector2(750, 450), new Vector2(20.5, 0), 400000, 30);
-                Planet kolmas = new Planet("Big2", new Vector2(750, 500), new Vector2(-20.5, 0), 400000, 30);
-                Planet distant = new Planet("I'm smol", new Vector2(750, 100), new Vector2(15, 0), 10000, 15);
+                scale = 5;
+                Planet a = new Planet("A", new Vector2(-1.7E12, 0), new Vector2(0, 2700), 2.2E30, 30);
+                Planet b = new Planet("B", new Vector2(1.7E12, 0), new Vector2(0, -1100), 1.8E30, 25);
+                // Planet distant = new Planet("I'm smol", new Vector2(750, 100), new Vector2(15, 0), 10000, 15);
 
-                simulaatio.add(toinen);
-                simulaatio.add(kolmas);
-                simulaatio.add(distant);
-                stepcounter = 0;
-                timecounter = 0;
-                drawSim();
-            }
-        });
-    }
-    
-    public void preset4Content(MenuItem preset) {
-        preset.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                simulaatio.clear();
-                Planet toinen = new Planet("Star", new Vector2(750, 450), new Vector2(0, 0), 4000000, 50);
-                Planet kolmas = new Planet("Gas giant", new Vector2(200, 450), new Vector2(0, 25), 80000, 20);
-                Planet distant = new Planet("Moon", new Vector2(210, 440), new Vector2(-10.5, 17), 10, 5);
-
-                simulaatio.add(toinen);
-                simulaatio.add(kolmas);
-                simulaatio.add(distant);
-                stepcounter = 0;
-                timecounter = 0;
-                drawSim();
-            }
-        });
-    }
-    
-    public void presetRandomContent(MenuItem preset, int n) {
-        
-        preset.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Random rndm = new Random();
-                simulaatio.clear();
-                for (int i = 0; i < n; i++) {
-                    Vector2 pos = new Vector2(100 + rndm.nextInt(1300), 100 + rndm.nextInt(800));
-                    
-                    // Randomisoidaan suunta (- vai +)
-                    double vx = rndm.nextDouble() * 5 * (rndm.nextBoolean() ? -1 : 1);
-                    double vy = rndm.nextDouble() * 5 * (rndm.nextBoolean() ? -1 : 1);
-                    Vector2 vel = new Vector2(vx, vy);
-                    Planet lisattava = new Planet(pos, vel, 100 + rndm.nextInt(400000), 2 + rndm.nextInt(30));
-                    simulaatio.add(lisattava);
-                }
+                simulaatio.add(a);
+                simulaatio.add(b);
+                //simulaatio.add(distant);
                 stepcounter = 0;
                 timecounter = 0;
                 drawSim();
@@ -506,18 +688,24 @@ public class UI extends Application {
             if (nameDisplay == true) {
                 nameDisplay = false;
                 disp.setText("Show planet names");
+                drawSim();
             } else {
                 nameDisplay = true;
                 disp.setText("Hide planet names");
+                drawSim();
             }
         });
     }
     
     private void updateStepCounter() {
         String s = String.valueOf(stepcounter);
-        String d = String.valueOf((int)timecounter);
+        long days = 0;
+        long years = 0;
+        String d = String.valueOf((long)timecounter);
+        String y = String.valueOf((int)yearcounter);
         
-        stepTimeLabel.setText("Elapsed timesteps: " + s + "        Elapsed time: " + d);
+        stepTimeLabel.setText("Elapsed timesteps: " + s + "        Elapsed days: " + d 
+        + "        Elapsed years: " + y);
     }
     
     // Vähän tynkä metodi

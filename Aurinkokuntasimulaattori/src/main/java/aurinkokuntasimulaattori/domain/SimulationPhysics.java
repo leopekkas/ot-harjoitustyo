@@ -12,7 +12,7 @@ import java.util.Iterator;
 public class SimulationPhysics {
     
     // Gravitaatiovakio G (AU**3*yr**(-2)*M(earth)**(-1))
-    private final double gconstant = 10;
+    private final double gconstant = 6.67408E-11;
     private final ArrayList<Planet> planets = new ArrayList<>();
     
     /**
@@ -62,13 +62,13 @@ public class SimulationPhysics {
                     if (other != planet && !other.isDeleted()) {
                         Vector2 delta = planet.getPos().substract(other.getPos());
                         
-                        // etäisyyden yksikköä AU vastaa simulaatiossa 100 pikseliä
-                        double et = delta.abs() * 10; 
+                        // etäisyys = |delta_pos|
+                        double et = delta.abs(); 
                         
                         // F = G * m1 * m2 / r**2
                         double f = -gconstant * (other.getMass() * planet.getMass()) / (et * et);
                         // F = m * a
-                        // a:n yksikkö nyt AU/yr**2
+                        // a:n yksikkö nyt m/s**2
                         double acceleration = f / planet.getMass();
                         
                         // Suunnataan kiihtyvyyden suunta oikeaan suuntaan
@@ -77,7 +77,7 @@ public class SimulationPhysics {
                     }
                     return Vector2.ZERO;
                 }).reduce(Vector2.ZERO, (accu, value) -> accu.add(value));
-        
+        // Yksikkö m/s
         planet.setVel(planet.getVel().add(force.mul(timestep))); 
     }
     
