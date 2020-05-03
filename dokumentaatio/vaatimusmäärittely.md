@@ -7,18 +7,34 @@
 
 ## Käyttöliittymä ##
 
-* Sovellus aukeaa kirjautumisnäkymään, josta voi valita uuden täysin oman simulaation luomisen tai jonkin valmiin tilanteen ajamisen. (Valmiit tilanteet tehtyinä suppeasti)
-* Valittuaan halitsemansa simulaatiotyppin käyttäjä pääsee näkymään, jossa planeetat käyttäytyvät simulaatiossa fysiikan lakien mukaisesti yksinkertaisessa 2D näkymässä. (Näkymä tehty)
+* Sovellus aukeaa kirjautumisnäkymään, josta voi valita uuden täysin oman simulaation luomisen tai jonkin valmiin tilanteen ajamisen.
+* Valittuaan halitsemansa simulaatiotyppin käyttäjä pääsee näkymään, jossa planeetat käyttäytyvät simulaatiossa fysiikan lakien mukaisesti yksinkertaisessa 2D näkymässä.
+* Käyttöliittymä sisältää menukentän, jossa on simulaation muokkaukseen, tallennukseen, lataamiseen ja skaalaamiseen tarvittavat toiminnallisuudet.
+* Käyttöliittymässä näkyy tietokenttä, joka kertoo simulaation laskemien askeleiden lukumäärän, sekä simulaation näkökulmasta kuluneen ajan päivissä ja vuosissa.
+* Käyttäjä voi tarkastella kappaleita pelkästään ''ympyröinä'', tai voi halutessaan näyttää ruudulla reaaliaikaisesti joka kappaleen nimitiedot vastaavan kappaleen alla.
 
 ## Perusversion tarjoama toiminnallisuus ##
 
-### Ennen ensimmäisen kappaleen initialisointia ###
+### Simulaation initialisointi ###
 
-* Käyttäjä voi luoda uuden keskuskappaleen, tai ladata tiedoston, joka sisältää esim. aiemmin käsiteltyjä kappaleita.
+* Käyttäjä voi itse luoda uusia kappaleita, tai ladata tiedoston, joka sisältää esim. aiemmin käsiteltyjä tai tallennettuja simulaatioita. Käyttäjä voi myös itse kirjoittaa omaan tiedostoon haluamansa tilanteen simulaatiolle.
 
-### Keskuskappaleen initialisoinnin jälkeen ###
+### Simulaation toiminnallisuudet initialisoinnin jälkeen ###
 
 * Käyttäjä pystyy tarkastella nykyisten kappaleiden käyttäytymistä yksinkertaisessa simulaatiossa.
-* Käyttäjä voi lisätä simulaatioon uusia kappaleita ja antamaan niille ominaisuuksia, kuten massan, halkaisijan, nopeuden ja tunnistetietoja, kuten nimen ja värin.
-* Käyttäjä pystyy tallentamaan nykyisen simulaation sisältämät kappaleet tiedostoon, jonka pystyy myöhemmin ajamaan uudestaan sovelluksessa. (Tehty)
-* Käyttäjä pystyy testailemaan valmiiksi luotuja tilanteita, esim. aurinkokuntaa vastaavaa järjestelmää. (Tehty)
+* Käyttäjä voi lisätä simulaatioon uusia kappaleita ja antamaan niille ominaisuuksia, kuten massan, halkaisijan, nopeuden ja tunnistetietona nimen.
+* Käyttäjä pystyy tallentamaan nykyisen simulaation sisältämät kappaleet tiedostoon, jonka pystyy myöhemmin ajamaan uudestaan sovelluksessa.
+* Käyttäjä pystyy testailemaan valmiiksi luotuja tilanteita, esim. aurinkokuntaa vastaavaa järjestelmää. 
+* Käyttäjä voi muuttaa simulaation laskemisessa käytettävän aika-askeleen pituuksia ja yksiköitä.
+* Simulaatio kertoo laskemiensa askeleiden lukumäärän, sekä simulaation näkökulmasta kuluneen ajan päivissä ja vuosissa.
+
+## Jatkokehitysideoita
+
+Perusversion jälkeen sovelluksen toimintaa voidaan laajentaa esim. seuraavanlaisilla toiminnallisuuksilla:
+
+* Värien lisääminen yhdeksi osaksi kappaleiden tietoja
+* Mahdollisuus syöttää kappaleiden tietoja eri yksiköissä
+* Metodi pyöreän kiertoradan laskemiseen, jolloin kys. kappaleilla voitaisiin jättää nopeudet ilmoittamatta syötetiedostossa
+* Käyttöliittymän siirtäminen hiirellä, näkymän kohdistus yksittäisiin kappaleisiin
+* Käyttöliittymän kaunistamista
+
