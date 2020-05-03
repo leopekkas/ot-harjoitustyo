@@ -160,7 +160,7 @@ public class UI extends Application {
     }
     
     private Slider timestepSlider() {
-        Slider step = new Slider(0.0, 20.0, 1);
+        Slider step = new Slider(0.0, 10.0, 1);
         step.setShowTickLabels(true);
         step.setShowTickMarks(true);
         step.setMajorTickUnit(5);
@@ -495,19 +495,22 @@ public class UI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 simulaatio.clear();
-                stepcounter = 0;
-                timecounter = 0;
+                simulationTimeline.stop();
+                resetCounters();
                 drawSim();
             }
         });
     }
     
+    // TODO: ainakin aurinkokunnan planeettojen nimet 
+    // jotenkin järkevästi esim erilliseen tiedostoon
     public void solarSystemContent(MenuItem preset) {
         preset.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 simulaatio.clear();
-                scale = 1.2;
+                scale = 6.3;
+                
                 Planet aurinko = new Planet("Sun", new Vector2(0, 0), new Vector2(0, 0), 2E30, 13);
                 
                 Planet maa = new Planet("Earth", new Vector2(1.496E11, 0), new Vector2(0, 30000), 5.972E24, 4);
@@ -534,8 +537,8 @@ public class UI extends Application {
                 simulaatio.add(pluto);
                 
                 simulaatio.add(aurinko);
-                stepcounter = 0;
-                timecounter = 0;
+                
+                resetCounters();
                 drawSim();
             }
         });
@@ -559,8 +562,8 @@ public class UI extends Application {
                 simulaatio.add(kolmas);
                 simulaatio.add(neljas);
                 simulaatio.add(viides);
-                stepcounter = 0;
-                timecounter = 0;
+                
+                resetCounters();
                 drawSim();
             }
         });
@@ -579,11 +582,16 @@ public class UI extends Application {
                 simulaatio.add(a);
                 simulaatio.add(b);
                 //simulaatio.add(distant);
-                stepcounter = 0;
-                timecounter = 0;
+                resetCounters();
                 drawSim();
             }
         });
+    }
+    
+    public void resetCounters() {
+        stepcounter = 0;
+        timecounter = 0;
+        yearcounter = 0;
     }
     
     public void setUpCustomize(Menu menu) {
