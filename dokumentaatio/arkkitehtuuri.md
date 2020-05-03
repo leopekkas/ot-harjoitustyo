@@ -41,6 +41,7 @@ Jossa tiedot järjestyksessä kuvaavat kappaleen ominaisuuksia seuraavanlaisesti
 - Nopeusvektorin y-komponentti
 - Sassa
 - Säde
+
 Tietojen kentät on eroteltuina pilkulla ja välillä. Kappaleen nimi on String-olio ja muut ominaisuudet Double-muuttujia. 
 
 ## Päätoiminnallisuudet
