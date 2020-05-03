@@ -8,9 +8,11 @@ Sovelluksen avulla käyttäjä voi tarkastella gravitaation vaikutuksia aurinkok
 
 [Vaatimusmäärittely](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/vaatimusm%C3%A4%C3%A4rittely.md)
 
-[Työaikakirjanpito](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/Työaikakirjanpito.md)
+[Testausdokumentti](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/testaus.md)
 
 [Arkkitehtuurikuvaus](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/arkkitehtuuri.md)
+
+[Työaikakirjanpito](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/Työaikakirjanpito.md)
 
 ## Releaset
 
