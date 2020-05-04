@@ -37,8 +37,7 @@ public class Saver {
             }
             wr.close();
         } catch (IOException ioe) {
-            System.out.println("Error");
-            ioe.printStackTrace();
+            
         }
         
     }

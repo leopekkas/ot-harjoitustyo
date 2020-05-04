@@ -293,7 +293,7 @@ public class UI extends Application {
                 File savefile = chooser.showSaveDialog(null);
                 saver.saveSimulationData(savefile, simulaatio.getPlanets());
             } catch (NullPointerException e) {
-                System.out.println("No file picked");
+                
             }    
         });
         
@@ -309,10 +309,9 @@ public class UI extends Application {
                 timecounter = 0;
                 drawSim();
             } catch (IOException ioe) {
-                System.out.println("Error");
-                ioe.printStackTrace();
+                
             } catch (NullPointerException e) {
-                System.out.println("No file picked");
+                
             }
             
         });
@@ -596,7 +595,7 @@ public class UI extends Application {
     
     public void setUpCustomize(Menu menu) {
         MenuItem add = new MenuItem("Add an object");
-        MenuItem delete = new MenuItem("Clear a single object");
+        MenuItem delete = new MenuItem("Clear an object");
         MenuItem disp = new MenuItem("Show planet names");
         menu.getItems().addAll(add, delete, disp);
         userDeletePlanet(delete);
