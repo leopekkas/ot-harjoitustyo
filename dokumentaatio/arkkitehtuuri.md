@@ -4,13 +4,17 @@
 
 Ohjelman koodin pakkausrakenne on seuraava: 
 
+![Pakkausrakenne](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/kuvat/pakkausrakenne.png)
 
+Pakkaus _aurinkokuntasimulaattori.ui_ sisältää JavaFX:llä toteutetun käyttöliittymän, _aurinkokuntasimulaattori.domain_ ohjelman sovelluslogiikan ja pysyväistallennuksen metodit. Pakkaus _aurinkokuntasimulaattori.math_ sisältää sovelluslogiikan käyttämien vektoreiden ominaisuudet.
 
 ## Sovelluslogiikka
 
-Sovelluksen loogisen datamallin muodostavat luokat Kappale ja Aurinkokunta, jotka kuvaavat simulaatiossa pyöriviä kappaleita suhteessa aurinkokuntaansa.
+Sovelluksen loogisen datamallin muodostavat luokat Planet ja Vector2, jotka kuvaavat simulaatiossa pyöriviä kappaleita ja niiden ominaisuuksia osana simulaatiota. (Huom. Kuvassa on virheellisesti Planet-luokka Kappale nimellä)
 
-![Kuva sovelluslogiikasta](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/kuvat/sovelluslogiikka.png)
+![Kuva sovelluslogiikasta](https://github.com/leopekkas/ot-harjoitustyo/blob/master/dokumentaatio/kuvat/slogiikka.png)
+
+Toiminnallisuuksista vastaa luokan [SimulationPhysics](https://github.com/leopekkas/ot-harjoitustyo/blob/master/Aurinkokuntasimulaattori/src/main/java/aurinkokuntasimulaattori/domain/SimulationPhysics.java) ainoa olio. Luokan tehtävänä on tarjota kappaleiden liikeratojen laskemisten ominaisuudet niiden vaikuttaessa toisiinsa. Luokka myös pitää tietoa senaikaisen ajettavan simulaation kappaleista listan avulla. 
 
 ## Käyttöliittymä 
 
