@@ -1,3 +1,11 @@
+# Arkkitehtuurikuvaus
+
+## Rakenne
+
+Ohjelman koodin pakkausrakenne on seuraava: 
+
+
+
 ## Sovelluslogiikka
 
 Sovelluksen loogisen datamallin muodostavat luokat Kappale ja Aurinkokunta, jotka kuvaavat simulaatiossa pyöriviä kappaleita suhteessa aurinkokuntaansa.
