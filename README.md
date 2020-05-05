@@ -20,6 +20,8 @@ Sovelluksen avulla käyttäjä voi tarkastella gravitaation vaikutuksia aurinkok
 
 [Viikko 6](https://github.com/leopekkas/ot-harjoitustyo/releases/tag/viikko6)
 
+[Loppupalautus](https://github.com/leopekkas/ot-harjoitustyo/releases/tag/Loppupalautus)
+
 ## Komentorivitoiminnot 
 
 ### Testaus
