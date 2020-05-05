@@ -18,5 +18,5 @@
 | 28.4. | 4    | Pysyväistallennuksen ja tiedostojen lataamisen ominaisuudet ja testit näille |
 | 30.4. | 2    | Interface kappaleiden poistamista varten, kappaleiden nimien näyttäminen käyttöliittymässä |
 | 2.5.  | 3    | Simulaation mittakaavan skaalaus etäisyyksien ja aikayksiköiden suhteen |
-| 3.5.  | 1,5  | Dokumentaation tarkentamista loppupalautusta varten |
-| Yht.  | 36,5 |
+| 3.5.-4.5.  | 2  | Dokumentaation tarkentamista loppupalautusta varten |
+| Yht.  | 37 |
